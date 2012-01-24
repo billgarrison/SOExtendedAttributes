@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Categories/NSURL+SOExtendedAttributes.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cat/NSURL(SOExtendedAttributes)</TokenIdentifier>
+			<Abstract type="html">The SOExtendedAttributes category on NSURL enables retrieving and manipulating the extended attributes on a file system item.</Abstract>
+			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>
+			
+			<NodeRef refid="1"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSURL(SOExtendedAttributes)/extendedAttributesWithError:</TokenIdentifier>
+			<Abstract type="html">Returns the extended attributes of the file system item at this URL.</Abstract>
+			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>			
+			
+			<Declaration>- (NSDictionary *)extendedAttributesWithError:(NSError *__autoreleasing *)outError</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>outError</Name>
+					<Abstract type="html">A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSDictionary object that describes the extended attributes of the file system object, or nil if an error occurred.</Abstract></ReturnValue>
+			<Anchor>//api/name/extendedAttributesWithError:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSURL(SOExtendedAttributes)/setExtendedAttributes:error:</TokenIdentifier>
+			<Abstract type="html">Sets the extended attribute values for the given URL.</Abstract>
+			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)setExtendedAttributes:(NSDictionary *)attributes error:(NSError *__autoreleasing *)outError</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>attributes</Name>
+					<Abstract type="html">The extended attribute names and values to be set. All values be instances of NSData, NSString, NSArray, NSDictionary, NSDate or NSNumber.</Abstract>
+				</Parameter><Parameter>
+					<Name>outError</Name>
+					<Abstract type="html">A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if all given attribute values were set. NO if there was an error setting one or more of the values.</Abstract></ReturnValue>
+			<Anchor>//api/name/setExtendedAttributes:error:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSURL(SOExtendedAttributes)/hasExtendedAttributeWithName:</TokenIdentifier>
+			<Abstract type="html">Returns YES if the file system item has the named attribute.</Abstract>
+			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)hasExtendedAttributeWithName:(NSString *)name</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>name</Name>
+					<Abstract type="html">The name of the extended attribute. Throws NSInvalidArgumentException if name is nil or empty.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if the named extended attribute is present on the URL; NO otherwise.</Abstract></ReturnValue>
+			<Anchor>//api/name/hasExtendedAttributeWithName:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSURL(SOExtendedAttributes)/valueOfExtendedAttributeWithName:error:</TokenIdentifier>
+			<Abstract type="html">Returns the value of the named extended attribute from this file system item.</Abstract>
+			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>			
+			
+			<Declaration>- (id)valueOfExtendedAttributeWithName:(NSString *)name error:(NSError *__autoreleasing *)outError</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>name</Name>
+					<Abstract type="html">The name of the extended attribute. Throws NSInvalidArgumentException if name is nil or empty.</Abstract>
+				</Parameter><Parameter>
+					<Name>outError</Name>
+					<Abstract type="html">A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An appropriate Foundation object holding the value, or nil if there was an error.</Abstract></ReturnValue>
+			<Anchor>//api/name/valueOfExtendedAttributeWithName:error:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSURL(SOExtendedAttributes)/setExtendedAttributeValue:forName:error:</TokenIdentifier>
+			<Abstract type="html">Set the value of the named extended attribute.</Abstract>
+			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)setExtendedAttributeValue:(id)value forName:(NSString *)name error:(NSError *__autoreleasing *)outError</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>value</Name>
+					<Abstract type="html">The value to be set. Must be an instance of NSData, NSString, NSArray, NSDictionary, NSDate or NSNumber.</Abstract>
+				</Parameter><Parameter>
+					<Name>name</Name>
+					<Abstract type="html">The name of the extended attribute. Throws NSInvalidArgumentException if name is nil or empty.</Abstract>
+				</Parameter><Parameter>
+					<Name>outError</Name>
+					<Abstract type="html">A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if the given value was set; NO if there was an error.</Abstract></ReturnValue>
+			<Anchor>//api/name/setExtendedAttributeValue:forName:error:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSURL(SOExtendedAttributes)/removeExtendedAttributeWithName:error:</TokenIdentifier>
+			<Abstract type="html">Removes the named extended attribute from this file system item.</Abstract>
+			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)removeExtendedAttributeWithName:(NSString *)name error:(NSError *__autoreleasing *)outError</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>name</Name>
+					<Abstract type="html">The name of the extended attribute. Throws NSInvalidArgumentException if name is nil or empty.</Abstract>
+				</Parameter><Parameter>
+					<Name>outError</Name>
+					<Abstract type="html">A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if successfully removed or named attribute does not exist. NO if there was an error.</Abstract></ReturnValue>
+			<Anchor>//api/name/removeExtendedAttributeWithName:error:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

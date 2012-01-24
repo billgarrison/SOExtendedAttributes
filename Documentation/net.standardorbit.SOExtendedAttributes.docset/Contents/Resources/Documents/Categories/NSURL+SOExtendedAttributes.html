@@ -1,0 +1,699 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>NSURL(SOExtendedAttributes) Category Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<meta name="viewport" content="width=550" />
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.0.5 (build 752)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">SOExtendedAttributes </a></h1>
+				<a id="developerHome" href="../index.html">Standard Orbit</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">NSURL(SOExtendedAttributes) Category Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/extendedAttributesWithError:">&nbsp;&nbsp;&nbsp;&nbsp;- extendedAttributesWithError:</option>
+	
+	<option value="//api/name/hasExtendedAttributeWithName:">&nbsp;&nbsp;&nbsp;&nbsp;- hasExtendedAttributeWithName:</option>
+	
+	<option value="//api/name/removeExtendedAttributeWithName:error:">&nbsp;&nbsp;&nbsp;&nbsp;- removeExtendedAttributeWithName:error:</option>
+	
+	<option value="//api/name/setExtendedAttributeValue:forName:error:">&nbsp;&nbsp;&nbsp;&nbsp;- setExtendedAttributeValue:forName:error:</option>
+	
+	<option value="//api/name/setExtendedAttributes:error:">&nbsp;&nbsp;&nbsp;&nbsp;- setExtendedAttributes:error:</option>
+	
+	<option value="//api/name/valueOfExtendedAttributeWithName:error:">&nbsp;&nbsp;&nbsp;&nbsp;- valueOfExtendedAttributeWithName:error:</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Accessing attributes in batches">Accessing attributes in batches</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Accessing attributes individually">Accessing attributes individually</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Removing an extended attribute">Removing an extended attribute</a></span></li>
+	
+</ul></li>
+
+
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/extendedAttributesWithError:">extendedAttributesWithError:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/hasExtendedAttributeWithName:">hasExtendedAttributeWithName:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/removeExtendedAttributeWithName:error:">removeExtendedAttributeWithName:error:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setExtendedAttributeValue:forName:error:">setExtendedAttributeValue:forName:error:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setExtendedAttributes:error:">setExtendedAttributes:error:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/valueOfExtendedAttributeWithName:error:">valueOfExtendedAttributeWithName:error:</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="NSURL(SOExtendedAttributes) Category Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">NSURL(SOExtendedAttributes) Category Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">NSURL+SOExtendedAttributes.h<br />NSURL+SOExtendedAttributes.m</td>
+</tr>
+						</tbody></table></div>
+					
+					
+					
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>The SOExtendedAttributes category on NSURL enables retrieving and manipulating the extended attributes on a file system item.</p>
+
+<p>These methods are valid only on file URLs. An NSInternalInconsistencyException is thrown if invoked an a non-file URL.</p>
+
+<p>Internally, they&rsquo;re implemented using <a href="x-man-page://listxattr">listxattr(2)</a>, <a href="x-man-page://getxattr">getxattr(2)</a>, <a href="x-man-page://setxattr">setxattr(2)</a>, and <a href="x-man-page://removexattr">removexattr(2)</a>.</p>
+
+<p><strong> Compatibility </strong></p>
+
+<p>SOExtendedAttributes is compatible with Mac OS X 10.6+ and iOS 5. The clang compiler is required. The source file <code>NSURL+SOExtendedAttributes.m</code> must be compiled with ARC enabled. For an alternate Cocoa implementation compatible with Mac OS X 10.4 and greater, see <a href="http://zathras.de/angelweb/sourcecode.htm">UKXattrMetadataStore</a>.</p>
+
+<p><strong> Symbolic links </strong></p>
+
+<p>These methods act on the explicitly given URL. If that URL is to a symbolic link, you&rsquo;ll be manipulating extended attributes on the symlink, not its original file. Use <code>-URLByResolvingSymlinksInPath</code> to obtain a URL for which points to the original file system item.</p>
+
+<p><strong> Use with iCloud Backup </strong></p>
+
+<p>iCloud (as of iOS 5.0.1) honors the extended attribute <code>@"com.apple.MobileMeBackup"</code> as a flag to exclude a file system item from iCloud backup. This category defines the constant <code>iCloudDoNotBackupAttributeName</code> to work with this iCloud behavior.</p>
+
+<p><strong> Constants </strong></p>
+
+<p><code>iCloudDoNotBackupAttributeName = @"com.apple.MobileMeBackup"</code></p>
+
+<p>E.g. To determine if a file system item is marked to be excluded from iCloud backup:</p>
+
+<pre><code>NSURL fileURL = ...;
+BOOL isExcludedFromiCloudBackup = [fileURL hasExtendedAttributeWithName:iCloudDoNotBackupAttribute];
+</code></pre>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						<a title="Accessing attributes in batches" name="task_Accessing attributes in batches"></a>
+						<h3 class="subsubtitle task-title">Accessing attributes in batches</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/extendedAttributesWithError:">&ndash;&nbsp;extendedAttributesWithError:</a></code>
+		<span class="tooltip"><p>Returns the extended attributes of the file system item at this URL.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setExtendedAttributes:error:">&ndash;&nbsp;setExtendedAttributes:error:</a></code>
+		<span class="tooltip"><p>Sets the extended attribute values for the given URL.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Accessing attributes individually" name="task_Accessing attributes individually"></a>
+						<h3 class="subsubtitle task-title">Accessing attributes individually</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/hasExtendedAttributeWithName:">&ndash;&nbsp;hasExtendedAttributeWithName:</a></code>
+		<span class="tooltip"><p>Returns YES if the file system item has the named attribute.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/valueOfExtendedAttributeWithName:error:">&ndash;&nbsp;valueOfExtendedAttributeWithName:error:</a></code>
+		<span class="tooltip"><p>Returns the value of the named extended attribute from this file system item.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setExtendedAttributeValue:forName:error:">&ndash;&nbsp;setExtendedAttributeValue:forName:error:</a></code>
+		<span class="tooltip"><p>Set the value of the named extended attribute.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Removing an extended attribute" name="task_Removing an extended attribute"></a>
+						<h3 class="subsubtitle task-title">Removing an extended attribute</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/removeExtendedAttributeWithName:error:">&ndash;&nbsp;removeExtendedAttributeWithName:error:</a></code>
+		<span class="tooltip"><p>Removes the named extended attribute from this file system item.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/extendedAttributesWithError:" title="extendedAttributesWithError:"></a>
+	<h3 class="subsubtitle method-title">extendedAttributesWithError:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Returns the extended attributes of the file system item at this URL.</p>
+	</div>		
+	
+	
+	<div class="method-subsection method-declaration"><code>- (NSDictionary *)extendedAttributesWithError:(NSError *__autoreleasing *)<em>outError</em></code></div>
+	
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>outError</em></dt>
+			<dd><p>A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you&rsquo;re not interesting in error reporting.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An NSDictionary object that describes the extended attributes of the file system object, or nil if an error occurred.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Return all extended attributes that the current user account has permission to access. Attributes will include the HFS compression extended attribute if present.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">NSURL+SOExtendedAttributes.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/hasExtendedAttributeWithName:" title="hasExtendedAttributeWithName:"></a>
+	<h3 class="subsubtitle method-title">hasExtendedAttributeWithName:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Returns YES if the file system item has the named attribute.</p>
+	</div>		
+	
+	
+	<div class="method-subsection method-declaration"><code>- (BOOL)hasExtendedAttributeWithName:(NSString *)<em>name</em></code></div>
+	
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>name</em></dt>
+			<dd><p>The name of the extended attribute. Throws <code>NSInvalidArgumentException</code> if name is nil or empty.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the named extended attribute is present on the URL; NO otherwise.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Sometimes, you&rsquo;re only interested in the presence or absence of an extended attribute on a given URL. E.g. @&ldquo;com.apple.MobileMeBackup&rdquo;.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">NSURL+SOExtendedAttributes.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/removeExtendedAttributeWithName:error:" title="removeExtendedAttributeWithName:error:"></a>
+	<h3 class="subsubtitle method-title">removeExtendedAttributeWithName:error:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Removes the named extended attribute from this file system item.</p>
+	</div>		
+	
+	
+	<div class="method-subsection method-declaration"><code>- (BOOL)removeExtendedAttributeWithName:(NSString *)<em>name</em> error:(NSError *__autoreleasing *)<em>outError</em></code></div>
+	
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>name</em></dt>
+			<dd><p>The name of the extended attribute. Throws <code>NSInvalidArgumentException</code> if name is nil or empty.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>outError</em></dt>
+			<dd><p>A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you&rsquo;re not interesting in error reporting.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if successfully removed or named attribute does not exist. NO if there was an error.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">NSURL+SOExtendedAttributes.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setExtendedAttributeValue:forName:error:" title="setExtendedAttributeValue:forName:error:"></a>
+	<h3 class="subsubtitle method-title">setExtendedAttributeValue:forName:error:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Set the value of the named extended attribute.</p>
+	</div>		
+	
+	
+	<div class="method-subsection method-declaration"><code>- (BOOL)setExtendedAttributeValue:(id)<em>value</em> forName:(NSString *)<em>name</em> error:(NSError *__autoreleasing *)<em>outError</em></code></div>
+	
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>value</em></dt>
+			<dd><p>The value to be set. Must be an instance of NSData, NSString, NSArray, NSDictionary, NSDate or NSNumber.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>name</em></dt>
+			<dd><p>The name of the extended attribute. Throws <code>NSInvalidArgumentException</code> if name is nil or empty.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>outError</em></dt>
+			<dd><p>A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you&rsquo;re not interesting in error reporting.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the given value was set; NO if there was an error.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">NSURL+SOExtendedAttributes.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setExtendedAttributes:error:" title="setExtendedAttributes:error:"></a>
+	<h3 class="subsubtitle method-title">setExtendedAttributes:error:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Sets the extended attribute values for the given URL.</p>
+	</div>		
+	
+	
+	<div class="method-subsection method-declaration"><code>- (BOOL)setExtendedAttributes:(NSDictionary *)<em>attributes</em> error:(NSError *__autoreleasing *)<em>outError</em></code></div>
+	
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>attributes</em></dt>
+			<dd><p>The extended attribute names and values to be set. All values be instances of NSData, NSString, NSArray, NSDictionary, NSDate or NSNumber.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>outError</em></dt>
+			<dd><p>A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you&rsquo;re not interesting in error reporting.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if all given attribute values were set. NO if there was an error setting one or more of the values.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>The attributes dictionary parameter may contain any object value that can be encoded as a property list.</p>
+
+<p>If the attributes dictionary holds a value object that cannot be encoded as a plist, an NSError with code <code>SOExtendedAttributesValueCantBeSerialized</code> is returned via the outError parameter.</p>
+
+<p>On error, a partial number of the given extended attributes may have been successfully set. The error returned through outError will indicate which attributes could not be set. In particular, <code>[[*outError userInfo] objectForKey:NSUnderlyingErrorKey]</code></p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">NSURL+SOExtendedAttributes.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/valueOfExtendedAttributeWithName:error:" title="valueOfExtendedAttributeWithName:error:"></a>
+	<h3 class="subsubtitle method-title">valueOfExtendedAttributeWithName:error:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Returns the value of the named extended attribute from this file system item.</p>
+	</div>		
+	
+	
+	<div class="method-subsection method-declaration"><code>- (id)valueOfExtendedAttributeWithName:(NSString *)<em>name</em> error:(NSError *__autoreleasing *)<em>outError</em></code></div>
+	
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>name</em></dt>
+			<dd><p>The name of the extended attribute. Throws <code>NSInvalidArgumentException</code> if name is nil or empty.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>outError</em></dt>
+			<dd><p>A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you&rsquo;re not interesting in error reporting.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An appropriate Foundation object holding the value, or nil if there was an error.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">NSURL+SOExtendedAttributes.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2012 Standard Orbit. All rights reserved. (Last updated: 2012-01-23)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.0.5 (build 752)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+		</script>
+	</body>
+</html>

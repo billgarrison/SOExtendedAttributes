@@ -1,0 +1,321 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F212A53714CDC35900B65EA9 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F212A53614CDC35900B65EA9 /* SenTestingKit.framework */; };
+		F212A53914CDC35900B65EA9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F212A53814CDC35900B65EA9 /* Cocoa.framework */; };
+		F212A54E14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = F212A54D14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.m */; };
+		F212A55114CDC58800B65EA9 /* SOExtendedAttributes_UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F212A55014CDC58800B65EA9 /* SOExtendedAttributes_UnitTests.m */; };
+		F212A55614CDC5B600B65EA9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F212A55414CDC5B600B65EA9 /* InfoPlist.strings */; };
+		F2191C1814CE06AA004557C9 /* SOUsefulFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = F2191C1614CE06AA004557C9 /* SOUsefulFunctions.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F212A53314CDC35900B65EA9 /* SOExtendedAttributes.UnitTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SOExtendedAttributes.UnitTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F212A53614CDC35900B65EA9 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		F212A53814CDC35900B65EA9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		F212A53B14CDC35900B65EA9 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		F212A53C14CDC35900B65EA9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F212A53D14CDC35900B65EA9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F212A54C14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+SOExtendedAttributes.h"; sourceTree = "<group>"; };
+		F212A54D14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+SOExtendedAttributes.m"; sourceTree = "<group>"; };
+		F212A55014CDC58800B65EA9 /* SOExtendedAttributes_UnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SOExtendedAttributes_UnitTests.m; path = UnitTests/SOExtendedAttributes_UnitTests.m; sourceTree = SOURCE_ROOT; };
+		F212A55214CDC5A900B65EA9 /* UnitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "UnitTests-Info.plist"; path = "UnitTests/UnitTests-Info.plist"; sourceTree = SOURCE_ROOT; };
+		F212A55314CDC5A900B65EA9 /* UnitTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UnitTests-Prefix.pch"; path = "UnitTests/UnitTests-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		F212A55514CDC5B600B65EA9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = UnitTests/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		F212A55914CDC65900B65EA9 /* appledoc.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = appledoc.sh; sourceTree = "<group>"; };
+		F212A55A14CDC65900B65EA9 /* net.standardorbit.SOExtendedAttributes.docset */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = net.standardorbit.SOExtendedAttributes.docset; sourceTree = "<group>"; };
+		F212A55B14CDC65900B65EA9 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		F2191C1614CE06AA004557C9 /* SOUsefulFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOUsefulFunctions.m; sourceTree = SOURCE_ROOT; };
+		F2191C1714CE06AA004557C9 /* SOUsefulFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOUsefulFunctions.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F212A52F14CDC35900B65EA9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F212A53714CDC35900B65EA9 /* SenTestingKit.framework in Frameworks */,
+				F212A53914CDC35900B65EA9 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F212A51F14CDC2D900B65EA9 = {
+			isa = PBXGroup;
+			children = (
+				F212A54C14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.h */,
+				F212A54D14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.m */,
+				F212A53E14CDC35900B65EA9 /* UnitTests */,
+				F212A55814CDC65900B65EA9 /* Documentation */,
+				F212A53514CDC35900B65EA9 /* Frameworks */,
+				F212A53414CDC35900B65EA9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F212A53414CDC35900B65EA9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F212A53314CDC35900B65EA9 /* SOExtendedAttributes.UnitTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F212A53514CDC35900B65EA9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F212A53614CDC35900B65EA9 /* SenTestingKit.framework */,
+				F212A53814CDC35900B65EA9 /* Cocoa.framework */,
+				F212A53A14CDC35900B65EA9 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F212A53A14CDC35900B65EA9 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F212A53B14CDC35900B65EA9 /* AppKit.framework */,
+				F212A53C14CDC35900B65EA9 /* CoreData.framework */,
+				F212A53D14CDC35900B65EA9 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		F212A53E14CDC35900B65EA9 /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				F212A55014CDC58800B65EA9 /* SOExtendedAttributes_UnitTests.m */,
+				F212A53F14CDC35900B65EA9 /* Supporting Files */,
+			);
+			name = UnitTests;
+			path = SOExtendedAttributes.UnitTests;
+			sourceTree = "<group>";
+		};
+		F212A53F14CDC35900B65EA9 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F2191C1614CE06AA004557C9 /* SOUsefulFunctions.m */,
+				F2191C1714CE06AA004557C9 /* SOUsefulFunctions.h */,
+				F212A55214CDC5A900B65EA9 /* UnitTests-Info.plist */,
+				F212A55314CDC5A900B65EA9 /* UnitTests-Prefix.pch */,
+				F212A55414CDC5B600B65EA9 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F212A55814CDC65900B65EA9 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				F212A55914CDC65900B65EA9 /* appledoc.sh */,
+				F212A55A14CDC65900B65EA9 /* net.standardorbit.SOExtendedAttributes.docset */,
+				F212A55B14CDC65900B65EA9 /* README.txt */,
+			);
+			path = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F212A53214CDC35900B65EA9 /* SOExtendedAttributes.UnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F212A54A14CDC35900B65EA9 /* Build configuration list for PBXNativeTarget "SOExtendedAttributes.UnitTests" */;
+			buildPhases = (
+				F212A52E14CDC35900B65EA9 /* Sources */,
+				F212A52F14CDC35900B65EA9 /* Frameworks */,
+				F212A53014CDC35900B65EA9 /* Resources */,
+				F212A53114CDC35900B65EA9 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SOExtendedAttributes.UnitTests;
+			productName = SOExtendedAttributes.UnitTests;
+			productReference = F212A53314CDC35900B65EA9 /* SOExtendedAttributes.UnitTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F212A52114CDC2D900B65EA9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Standard Orbit Software, LLC";
+			};
+			buildConfigurationList = F212A52414CDC2D900B65EA9 /* Build configuration list for PBXProject "SOExtendedAttributes" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F212A51F14CDC2D900B65EA9;
+			productRefGroup = F212A53414CDC35900B65EA9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F212A53214CDC35900B65EA9 /* SOExtendedAttributes.UnitTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F212A53014CDC35900B65EA9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F212A55614CDC5B600B65EA9 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F212A53114CDC35900B65EA9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F212A52E14CDC35900B65EA9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F212A54E14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.m in Sources */,
+				F212A55114CDC58800B65EA9 /* SOExtendedAttributes_UnitTests.m in Sources */,
+				F2191C1814CE06AA004557C9 /* SOUsefulFunctions.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F212A55414CDC5B600B65EA9 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F212A55514CDC5B600B65EA9 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F212A52614CDC2D900B65EA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = Debug;
+		};
+		F212A52714CDC2D900B65EA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = Release;
+		};
+		F212A54814CDC35900B65EA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UnitTests/UnitTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "UnitTests/UnitTests-Info.plist";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		F212A54914CDC35900B65EA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UnitTests/UnitTests-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "UnitTests/UnitTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F212A52414CDC2D900B65EA9 /* Build configuration list for PBXProject "SOExtendedAttributes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F212A52614CDC2D900B65EA9 /* Debug */,
+				F212A52714CDC2D900B65EA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F212A54A14CDC35900B65EA9 /* Build configuration list for PBXNativeTarget "SOExtendedAttributes.UnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F212A54814CDC35900B65EA9 /* Debug */,
+				F212A54914CDC35900B65EA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F212A52114CDC2D900B65EA9 /* Project object */;
+}
