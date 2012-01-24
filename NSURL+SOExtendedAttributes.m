@@ -205,9 +205,9 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     NSError *error = nil;
     NSArray *attributeNames = [self namesOfExtendedAttributesWithError:&error];
     
-    if (attributeNames)
+    if (!attributeNames)
     {
-        NSLog (@"ERROR: Could get list of attributes names: %@; %@", error, [error userInfo]);
+        NSLog (@"ERROR: Could not get list of attributes names: %@; %@", error, [error userInfo]);
     }
     return [attributeNames containsObject:name];
 }
