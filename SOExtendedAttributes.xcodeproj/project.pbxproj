@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F212A53714CDC35900B65EA9 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F212A53614CDC35900B65EA9 /* SenTestingKit.framework */; };
-		F212A53914CDC35900B65EA9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F212A53814CDC35900B65EA9 /* Cocoa.framework */; };
 		F212A54E14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = F212A54D14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.m */; };
 		F212A55114CDC58800B65EA9 /* SOExtendedAttributes_UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F212A55014CDC58800B65EA9 /* SOExtendedAttributes_UnitTests.m */; };
 		F212A55614CDC5B600B65EA9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F212A55414CDC5B600B65EA9 /* InfoPlist.strings */; };
@@ -18,7 +16,6 @@
 /* Begin PBXFileReference section */
 		F212A53314CDC35900B65EA9 /* SOExtendedAttributes.UnitTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SOExtendedAttributes.UnitTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F212A53614CDC35900B65EA9 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		F212A53814CDC35900B65EA9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		F212A53B14CDC35900B65EA9 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		F212A53C14CDC35900B65EA9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F212A53D14CDC35900B65EA9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -33,6 +30,7 @@
 		F212A55B14CDC65900B65EA9 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		F2191C1614CE06AA004557C9 /* SOUsefulFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOUsefulFunctions.m; sourceTree = SOURCE_ROOT; };
 		F2191C1714CE06AA004557C9 /* SOUsefulFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOUsefulFunctions.h; sourceTree = SOURCE_ROOT; };
+		F2CBB2B914E8EEE300937A53 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,8 +38,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F212A53714CDC35900B65EA9 /* SenTestingKit.framework in Frameworks */,
-				F212A53914CDC35900B65EA9 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,8 +67,8 @@
 		F212A53514CDC35900B65EA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F2CBB2B914E8EEE300937A53 /* Foundation.framework */,
 				F212A53614CDC35900B65EA9 /* SenTestingKit.framework */,
-				F212A53814CDC35900B65EA9 /* Cocoa.framework */,
 				F212A53A14CDC35900B65EA9 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -225,6 +221,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Debug;
@@ -235,6 +232,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release;
@@ -264,8 +262,13 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "UnitTests/UnitTests-Info.plist";
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					SenTestingKit,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -288,8 +291,13 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "UnitTests/UnitTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					SenTestingKit,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
