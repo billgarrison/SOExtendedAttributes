@@ -1,10 +1,22 @@
-
 /*
  NSURL+SOExtendedAttributes
  
  Copyright 2012 Standard Orbit Software, LLC. All rights reserved.
  License at the bottom of the file.
  */
+
+#import <Foundation/Foundation.h>
+#import <Availability.h>
+
+#if TARGET_OS_IPHONE
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+#elif TARGET_OS_MAC
+#ifndef __MAC_10_7
+#warning "This project uses features only available in Mac OS X SDK 10.7 and later."
+#endif
+#endif
 
 /**
  The SOExtendedAttributes category on NSURL enables retrieving and manipulating the extended attributes on a file system item.
@@ -45,7 +57,6 @@ enum {
     SOExtendedAttributesGetValueError,
 };
 
-#import <Foundation/Foundation.h>
 
 @interface NSURL (SOExtendedAttributes)
 

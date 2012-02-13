@@ -70,7 +70,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         if (bufferSize == -1) 
         {
             attributeNames = nil;
-            *outError = SOPOSIXErrorForURL(self);
+           if (outError) *outError = SOPOSIXErrorForURL(self);
             return nil;
         }
         
@@ -270,10 +270,13 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     }
     else
     {
-        NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
-        [errInfo setObject:[NSString stringWithFormat:@"Value of class %@ cannot be serialized into a plist", NSStringFromClass([value class])] forKey:NSLocalizedDescriptionKey];
-        [errInfo setObject:value forKey:@"value"];
-        *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesValueCantBeSerialized userInfo:errInfo];
+        if (outError)
+        {
+            NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
+            [errInfo setObject:[NSString stringWithFormat:@"Value of class %@ cannot be serialized into a plist", NSStringFromClass([value class])] forKey:NSLocalizedDescriptionKey];
+            [errInfo setObject:value forKey:@"value"];
+            *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesValueCantBeSerialized userInfo:errInfo];
+        }
         return NO;
     }
     
