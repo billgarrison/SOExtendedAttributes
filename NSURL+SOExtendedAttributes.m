@@ -67,17 +67,17 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         if (bufferSize == 0) return attributeNames;
         
         /* Problemo? Bail now with the POSIX error. */
-        if (bufferSize == -1) 
+        if (bufferSize == -1)
         {
             attributeNames = nil;
-           if (outError) *outError = SOPOSIXErrorForURL(self);
+            if (outError) *outError = SOPOSIXErrorForURL(self);
             return nil;
         }
         
         /* Parse the name buffer for attribute names.
          
-         Iterate the buffer character by character, looking for a NULL byte. 
-         When found, collect the range of bytes into an NSString and cache in our names list. 
+         Iterate the buffer character by character, looking for a NULL byte.
+         When found, collect the range of bytes into an NSString and cache in our names list.
          */
         
         uintptr_t ptr_startOfBuffer = (uintptr_t)[namesBuffer mutableBytes];
@@ -120,7 +120,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     
     @autoreleasepool
     {
-        NSArray *attributeNames = [self namesOfExtendedAttributesWithError:outError];        
+        NSArray *attributeNames = [self namesOfExtendedAttributesWithError:outError];
         if (attributeNames == nil) return nil;
         
         /* Pull the value for each found extended attribute. */
@@ -151,7 +151,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         {
             NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
             [errInfo setObject:self forKey:NSURLErrorKey];
-            [errInfo setObject:collectedErrors forKey:NSUnderlyingErrorKey];                                
+            [errInfo setObject:collectedErrors forKey:NSUnderlyingErrorKey];
             *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesGetValueError userInfo:errInfo];
         }
     }
@@ -183,10 +183,10 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     
     BOOL hasErrors = [collectedErrors count] > 0;
     if (hasErrors && outError)
-    {        
+    {
         NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
         [errInfo setObject:self forKey:NSURLErrorKey];
-        [errInfo setObject:collectedErrors forKey:NSUnderlyingErrorKey];                                
+        [errInfo setObject:collectedErrors forKey:NSUnderlyingErrorKey];
         *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesSetValueError userInfo:errInfo];
         return NO;
     }
@@ -219,7 +219,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     
     id retrievedValue = nil;
     
-    @autoreleasepool 
+    @autoreleasepool
     {
         /* Get the size of the attribute value and pull it into an NSData is possible */
         
@@ -237,14 +237,16 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         /* Problemo? Bail out with error, ditching all collected attributes */
         
         if (dataSize == -1)
-        {        
+        {
             data = nil;
             if (outError) *outError = SOPOSIXErrorForURL(self);
+            
+        } else {
+            
+            /* Translate from encoded binary plist */
+            
+            retrievedValue = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:outError];
         }
-        
-        /* Translate from encoded binary plist */
-        
-        retrievedValue = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:outError];
     }
     
     return retrievedValue;
@@ -292,7 +294,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     if (err != 0)
     {
         /* Ignore any ENOATTR error ('attribute not found'), but capture and return all others. */
-        if (errno != ENOATTR) 
+        if (errno != ENOATTR)
         {
             if (outError) *outError = SOPOSIXErrorForURL(self);
             return NO;
