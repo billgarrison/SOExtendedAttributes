@@ -83,7 +83,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         uintptr_t ptr_startOfBuffer = (uintptr_t)[namesBuffer mutableBytes];
         uintptr_t ptr_startOfName = ptr_startOfBuffer;
         
-        for (size_t x = 0; x < bufferSize; x++ )
+        for (ssize_t x = 0; x < bufferSize; x++ )
         {
             /* Advance current byte pointer */
             
