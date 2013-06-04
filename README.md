@@ -26,16 +26,7 @@ The implementation uses [listxattr(2)](x-man-page://listxattr), [getxattr(2)](x-
 
  **Use with iCloud Backup**
 
- iCloud (as of iOS 5.0.1) honors the extended attribute `@"com.apple.MobileMeBackup"` as a flag to exclude a file system item from iCloud backup. This category defines the constant `iCloudDoNotBackupAttributeName` to work with this iCloud behavior.
-
- **Constants**
-
- `iCloudDoNotBackupAttributeName = @"com.apple.MobileMeBackup"`
-
- E.g. To determine if a file system item is marked to be excluded from iCloud backup:
-
-    NSURL fileURL = ...;
-    BOOL isExcluded = [fileURL hasExtendedAttributeWithName:iCloudDoNotBackupAttribute];
+ Note 2013-06-03: see [Apple Tech QA 1719](http://developer.apple.com/library/ios/#qa/qa1719/) for the recommended way to mark a file for exclusion from iCloud backup. Hint: don't use the @"com.apple.MobileMeBackup" extended attribute.
 
 
 **Extended Attribute Values**
@@ -87,3 +78,11 @@ For either Mac OS X or iOS projects, add these files:
 SOExtendedAttributes is compatible with Mac OS X 10.6+ and iOS 5. The clang compiler is required. The source file `NSURL+SOExtendedAttributes.m` must be compiled with ARC enabled. 
 
 For an alternate Cocoa implementation compatible with Mac OS X 10.4 and greater, see [UKXattrMetadataStore](http://zathras.de/angelweb/sourcecode.htm).
+
+## Credits
+
+Bill Garrison, initial creation. [@github](https://github.com/billgarrison), [@bitbucket](https://bitbucket.org/billgarrison)
+
+Uli Kusterer, for [UKXattrMetadataStore](http://zathras.de/angelweb/sourcecode.htm). 
+
+Simon Tännler, for starting a Cocoapods spec. [@github](https://github.com/simontea).
