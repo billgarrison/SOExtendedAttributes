@@ -44,10 +44,11 @@ An extended attribute value can be any Foundation object that can be serialized 
 
 **Maximum Value Size**
 
-The maximum size of an extended attribute value? I don't know. The Internet says anywhere from 3802 bytes to 128 KB. So the standard disclaimers apply: _Your mileage may vary. Void where prohibited. Do not operate heavy machinery._
+The maximum size of an extended attribute value? I'm not sure, but I believe it is a function of the node size in the HFS+ catalog or attributes tree. The Internet says anywhere from 3802 bytes to 128 KB. So the standard disclaimers apply: _Your mileage may vary. Void where prohibited. Do not operate heavy machinery._
 
 Refs: 
 [Google Search](http://www.google.com/?q=hfs%2B+extended+attributes+max+size)
+- [OSDir](http://osdir.com/ml/filesystem-dev/2009-07/msg00020.html)
 - [ArsTechnica 10.4 Review](http://arstechnica.com/apple/reviews/2005/04/macosx-10-4.ars/7)
 - [ArsTechnica 10.6 Review](http://arstechnica.com/apple/reviews/2009/08/mac-os-x-10-6.ars/3)
 - [MacFuse Release Notes](http://code.google.com/p/macfuse/source/browse/trunk/CHANGELOG.txt)
