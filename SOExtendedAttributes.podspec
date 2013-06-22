@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SOExtendedAttributes"
-  s.version      = "1.0.3"
+  s.version      = "1.0.4"
   s.summary      = "SOExtendedAttributes is a category on NSURL for manipulating the extended attributes of a file system object. BSD License."
   s.homepage     = "https://github.com/billgarrison/SOExtendedAttributes"
   s.license      = 'BSD'
