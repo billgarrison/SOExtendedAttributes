@@ -54,13 +54,13 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         
         /* Get the size of the attributes list, then extract each name as an NSString. */
         
-        NSMutableData *namesBuffer = nil;
+        void *namesBuffer = NULL;
         
         ssize_t bufferSize = listxattr (itemPath, NULL, SIZE_MAX, xattrDefaultOptions);
         if (bufferSize > 0)
         {
-            namesBuffer = [NSMutableData dataWithLength:bufferSize];
-            bufferSize = listxattr (itemPath, [namesBuffer mutableBytes], [namesBuffer length], xattrDefaultOptions );
+            namesBuffer = calloc(1, bufferSize);
+            bufferSize = listxattr (itemPath, namesBuffer, bufferSize, xattrDefaultOptions );
         }
         
         /* No names? Bail now with empty list. */
@@ -80,7 +80,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
          When found, collect the range of bytes into an NSString and cache in our names list.
          */
         
-        uintptr_t ptr_startOfBuffer = (uintptr_t)[namesBuffer mutableBytes];
+        uintptr_t ptr_startOfBuffer = (uintptr_t)namesBuffer;
         uintptr_t ptr_startOfName = ptr_startOfBuffer;
         
         for (ssize_t x = 0; x < bufferSize; x++ )
@@ -91,7 +91,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
             
             /* Check for the end of a name */
             
-            if ( *((char *)ptr_currentByte) == 0x0 )
+            if ( ptr_currentByte && *((char *)ptr_currentByte) == 0x0 )
             {
                 /* Collect the attribute name */
                 
@@ -104,6 +104,9 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
                 ptr_startOfName = ptr_currentByte + 1;
             }
         }
+        
+        /* Free the memory! */
+        free(namesBuffer); namesBuffer = NULL;
     }
     
     return attributeNames;
@@ -224,27 +227,24 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         /* Get the size of the attribute value and pull it into an NSData is possible */
         
         const char *itemPath = [[self path] fileSystemRepresentation];
-        
-        NSMutableData *data = [NSData data];
-        
+        void *buffer = NULL;
         ssize_t dataSize = getxattr (itemPath, [name UTF8String], NULL, SIZE_MAX, 0, xattrDefaultOptions);
         if (dataSize > 0)
         {
-            data = [NSMutableData dataWithLength: dataSize];
-            dataSize = getxattr (itemPath, [name UTF8String], [data mutableBytes], [data length], 0, xattrDefaultOptions );
+            buffer = calloc(1, dataSize);
+            dataSize = getxattr (itemPath, [name UTF8String], buffer, dataSize, 0, xattrDefaultOptions );
         }
         
         /* Problemo? Bail out with error, ditching all collected attributes */
         
         if (dataSize == -1)
         {
-            data = nil;
             if (outError) *outError = SOPOSIXErrorForURL(self);
             
         } else {
             
             /* Translate from encoded binary plist */
-            
+            NSData *data = [NSData dataWithBytesNoCopy:buffer length:dataSize freeWhenDone:YES];
             retrievedValue = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:outError];
         }
     }
