@@ -64,11 +64,17 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         }
         
         /* No names? Bail now with empty list. */
-        if (bufferSize == 0) return attributeNames;
+        if (bufferSize == 0)
+        {
+            if (namesBuffer) free(namesBuffer);
+            return attributeNames;
+        }
         
         /* Problemo? Bail now with the POSIX error. */
         if (bufferSize == -1)
         {
+            if (namesBuffer) free(namesBuffer);
+
             attributeNames = nil;
             if (outError) *outError = SOPOSIXErrorForURL(self);
             return nil;
@@ -197,8 +203,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     return YES;
 }
 
-#pragma mark -
-#pragma mark Individual Attributes
+#pragma mark - Individual Attributes
 
 - (BOOL) hasExtendedAttributeWithName:(NSString *)name
 {
@@ -240,6 +245,9 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         if (dataSize == -1)
         {
             if (outError) *outError = SOPOSIXErrorForURL(self);
+            if (buffer) {
+                free(buffer); buffer = NULL;
+            }
             
         } else {
             
@@ -247,6 +255,8 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
             NSData *data = [NSData dataWithBytesNoCopy:buffer length:dataSize freeWhenDone:YES];
             retrievedValue = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:outError];
         }
+        
+
     }
     
     return retrievedValue;
