@@ -41,6 +41,40 @@
     [super tearDown];
 }
 
+#pragma mark - Error Reporting Tests
+
+- (void) testCollectedErrrors
+{
+    /* Test that underlying errors generated from xattr are collected and reported properly. */
+    
+    NSURL *targetURL = [self generatedTestURL];
+    NSError *error = nil;
+    
+    /* Create a test file */
+    
+    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
+    
+    NSString *excessivelyLongName1 = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,";
+    NSString *excessivelyLongName2 = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, scooby";
+    NSString *excessivelyLongName3 = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, shaggy";
+
+    NSDictionary *badAttribs = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 @"LexLuthor" ,excessivelyLongName1,
+                                @"Magneto", excessivelyLongName2,
+                                @"KhanNoonianSingh", excessivelyLongName3,
+                                nil
+                                ];
+    
+    BOOL didAdd = [targetURL setExtendedAttributes:badAttribs error:&error];
+    
+    NSLog (@"error: %@", error);
+    
+    STAssertFalse (didAdd, @"Expected failure");
+    
+    STAssertNotNil (error, @"Expected an error report");
+    STAssertTrue ( [[[error userInfo] objectForKey:SOUnderlyingErrorsKey] isKindOfClass:[NSArray class]], @"Expected array of collected errors.");
+    STAssertTrue ( [[[error userInfo] objectForKey:SOUnderlyingErrorsKey] count] > 0, @"Expected multiple errors to be collected into an array.");
+}
 
 #pragma mark
 #pragma mark Batch Attribute Tests

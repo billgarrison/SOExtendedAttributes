@@ -18,6 +18,7 @@
 #endif
 #endif
 
+
 /**
  The SOExtendedAttributes category on NSURL enables retrieving and manipulating the extended attributes on a file system item.
  
@@ -56,6 +57,9 @@ enum {
     SOExtendedAttributesSetValueError,
     SOExtendedAttributesGetValueError,
 };
+
+/** When multiple errors are reported from the xattr API, they are collected and reported under this -[NSError userInfo] dictionary key. */
+extern NSString * const SOUnderlyingErrorsKey;
 
 
 @interface NSURL (SOExtendedAttributes)

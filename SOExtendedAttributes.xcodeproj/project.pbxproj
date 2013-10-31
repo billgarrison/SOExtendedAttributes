@@ -30,6 +30,7 @@
 		F212A55B14CDC65900B65EA9 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		F2191C1614CE06AA004557C9 /* SOUsefulFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOUsefulFunctions.m; sourceTree = SOURCE_ROOT; };
 		F2191C1714CE06AA004557C9 /* SOUsefulFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOUsefulFunctions.h; sourceTree = SOURCE_ROOT; };
+		F26FC50518222B4A00627018 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = SOURCE_ROOT; };
 		F2CBB2B914E8EEE300937A53 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -109,6 +110,7 @@
 		F212A55814CDC65900B65EA9 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
+				F26FC50518222B4A00627018 /* README.md */,
 				F212A55914CDC65900B65EA9 /* appledoc.sh */,
 				F212A55A14CDC65900B65EA9 /* net.standardorbit.SOExtendedAttributes.docset */,
 				F212A55B14CDC65900B65EA9 /* README.txt */,

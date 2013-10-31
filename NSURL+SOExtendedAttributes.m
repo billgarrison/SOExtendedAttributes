@@ -16,6 +16,7 @@
 
 NSString * const iCloudDoNotBackupAttributeName = @"com.apple.MobileBackup";
 NSString * const SOExtendedAttributesErrorDomain = @"SOExtendedAttributesErrorDomain";
+NSString * const SOUnderlyingErrorsKey = @"SOUnderlyingErrorsKey";
 
 /* Use default options with xattr API that don't resolve symlinks and show the HFS compression extended attribute. */
 
@@ -159,8 +160,9 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         if (hasErrors && outError)
         {
             NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
+            [errInfo setObject:NSLocalizedString(@"Failed to get one or more extended attribute values", @"Error message description for SOExtendedAttributesGetValueError") forKey:NSLocalizedDescriptionKey];
             [errInfo setObject:self forKey:NSURLErrorKey];
-            [errInfo setObject:collectedErrors forKey:NSUnderlyingErrorKey];
+            [errInfo setObject:collectedErrors forKey:SOUnderlyingErrorsKey];
             *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesGetValueError userInfo:errInfo];
         }
     }
@@ -194,8 +196,10 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     if (hasErrors && outError)
     {
         NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
+        [errInfo setObject:NSLocalizedString(@"Failed to set one or more extended attributes.", @"Error message description for SOExtendedAttributesSetValueError.")
+ forKey:NSLocalizedDescriptionKey];
         [errInfo setObject:self forKey:NSURLErrorKey];
-        [errInfo setObject:collectedErrors forKey:NSUnderlyingErrorKey];
+        [errInfo setObject:collectedErrors forKey:SOUnderlyingErrorsKey];
         *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesSetValueError userInfo:errInfo];
         return NO;
     }
