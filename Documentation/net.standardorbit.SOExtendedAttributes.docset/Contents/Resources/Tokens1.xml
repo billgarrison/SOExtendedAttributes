@@ -4,7 +4,7 @@
 		
 		<Token>
 			<TokenIdentifier>//apple_ref/occ/cat/NSURL(SOExtendedAttributes)</TokenIdentifier>
-			<Abstract type="html">When multiple errors are reported from the xattr API, they are collected and reported under this [NSError userInfo] dictionary key.</Abstract>
+			<Abstract type="html">The SOExtendedAttributes category on NSURL enables retrieving and manipulating the extended attributes on a file system item.</Abstract>
 			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>
 			
 			<NodeRef refid="1"/>

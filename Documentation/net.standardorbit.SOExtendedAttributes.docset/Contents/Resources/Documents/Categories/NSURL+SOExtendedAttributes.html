@@ -136,7 +136,27 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>When multiple errors are reported from the xattr API, they are collected and reported under this [NSError userInfo] dictionary key.</p>
+						<p>The SOExtendedAttributes category on NSURL enables retrieving and manipulating the extended attributes on a file system item.</p>
+
+<p>These methods are valid only on file URLs. An NSInternalInconsistencyException is thrown if invoked an a non-file URL.</p>
+
+<p>Internally, they&rsquo;re implemented using <a href="x-man-page://listxattr">listxattr(2)</a>, <a href="x-man-page://getxattr">getxattr(2)</a>, <a href="x-man-page://setxattr">setxattr(2)</a>, and <a href="x-man-page://removexattr">removexattr(2)</a>.</p>
+
+<p><strong> Compatibility </strong></p>
+
+<p>SOExtendedAttributes is compatible with Mac OS X 10.6+ and iOS 5. The clang compiler is required. The source file <code>NSURL+SOExtendedAttributes.m</code> must be compiled with ARC enabled. For an alternate Cocoa implementation compatible with Mac OS X 10.4 and greater, see <a href="http://zathras.de/angelweb/sourcecode.htm">UKXattrMetadataStore</a>.</p>
+
+<p><strong> Symbolic links </strong></p>
+
+<p>These methods act on the explicitly given URL. If that URL is to a symbolic link, you&rsquo;ll be manipulating extended attributes on the symlink, not its original file. Use <code>-URLByResolvingSymlinksInPath</code> to obtain a URL for which points to the original file system item.</p>
+
+<p><strong> Use with iCloud Backup </strong></p>
+
+<p>Note 2013-06-03: see <a href="http://developer.apple.com/library/ios/#qa/qa1719/">Apple Tech QA 1719</a> for the recommended way to mark a file for exclusion from iCloud backup. Hint: don&rsquo;t use the @&ldquo;com.apple.MobileMeBackup&rdquo; extended attribute.</p>
+
+<p><strong> Error Reporting </strong></p>
+
+<p>SOExtendedAttributes reports errors under the domain <code>SOExtendedAttributesErrorDomain</code>. When multiple errors occur on getting or setting extended attributes in a batch, the errors are collected in an NSArray and reported via error&rsquo;s -userInfo dictionary under <code>SOUnderlyingErrorsKey</code>.</p>
 					</div>
 					
 					

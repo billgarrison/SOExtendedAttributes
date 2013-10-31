@@ -11,32 +11,50 @@
 #include <sys/xattr.h>
 
 @interface SOExtendedAttributes_UnitTests : SenTestCase
-
+{
+    NSURL *targetURL;
+}
 @end
 
 @implementation SOExtendedAttributes_UnitTests
 
+
 #pragma mark
 #pragma mark Fixture
 
-- (NSURL *) generatedTestURL
+- (BOOL) createTestURLForTest:(SEL)testSelector
 {
-    NSURL *generatedURL = [NSURL fileURLWithPath:NSTemporaryDirectory()];
-    if (generatedURL)
+    BOOL didCreate = NO;
+    
+    targetURL = [NSURL fileURLWithPathComponents:[NSArray arrayWithObjects:NSTemporaryDirectory(), NSStringFromSelector(testSelector), SOGeneratedUUID(), nil]];
+    
+    if (targetURL)
     {
-        generatedURL = [generatedURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", NSStringFromSelector(_cmd), SOGeneratedUUID()]];
+        /* First create the intermediate parent directory */
+        didCreate = [[NSFileManager defaultManager] createDirectoryAtURL:[targetURL URLByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
+        
+        /* Then try creating an empty test file. */
+        if (didCreate) {
+            didCreate = [[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil];
+        }
     }
-    return generatedURL;
+    
+    return didCreate;
 }
+
 
 - (void) setUp
 {
     [super setUp];
-    
 }
 
 - (void) tearDown
-{    
+{
+    if (targetURL) {
+        if ( ![[NSFileManager defaultManager] removeItemAtPath:[targetURL path] error:nil]) {
+            NSLog (@"Couldn't cleanup test file: %@", targetURL);
+        }
+    }
     
     [super tearDown];
 }
@@ -47,30 +65,29 @@
 {
     /* Test that underlying errors generated from xattr are collected and reported properly. */
     
-    NSURL *targetURL = [self generatedTestURL];
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
     /* Create a test file */
     
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
-    
-    NSString *excessivelyLongName1 = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,";
-    NSString *excessivelyLongName2 = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, scooby";
-    NSString *excessivelyLongName3 = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, shaggy";
 
-    NSDictionary *badAttribs = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 @"LexLuthor" ,excessivelyLongName1,
-                                @"Magneto", excessivelyLongName2,
-                                @"KhanNoonianSingh", excessivelyLongName3,
-                                nil
-                                ];
     
-    BOOL didAdd = [targetURL setExtendedAttributes:badAttribs error:&error];
+    NSString *excessivelyLongName1 = @"Loremipsumdolorsitametconsecteturadipisicingelitseddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniamwangchung";
+    NSString *excessivelyLongName2 = @"Loremipsumdolorsitametconsecteturadipisicingelitseddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniamwangchungscooby";
+    NSString *excessivelyLongName3 = @"Loremipsumdolorsitametconsecteturadipisicingelitseddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniamwangchungshaggy";
+    
+    NSDictionary *badlyNamedAttribs = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       @"LexLuthor" ,excessivelyLongName1,
+                                       @"Magneto", excessivelyLongName2,
+                                       @"KhanNoonianSingh", excessivelyLongName3,
+                                       nil
+                                       ];
+    
+    BOOL didAdd = [targetURL setExtendedAttributes:badlyNamedAttribs error:&error];
     
     NSLog (@"error: %@", error);
     
     STAssertFalse (didAdd, @"Expected failure");
-    
     STAssertNotNil (error, @"Expected an error report");
     STAssertTrue ( [[[error userInfo] objectForKey:SOUnderlyingErrorsKey] isKindOfClass:[NSArray class]], @"Expected array of collected errors.");
     STAssertTrue ( [[[error userInfo] objectForKey:SOUnderlyingErrorsKey] count] > 0, @"Expected multiple errors to be collected into an array.");
@@ -80,13 +97,9 @@
 #pragma mark Batch Attribute Tests
 
 - (void) testAddRetrieveBatchOfAttributes
-{    
-    NSURL *targetURL = [self generatedTestURL];
+{
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
-    
-    /* Create a test file */
-    
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
     
     NSMutableDictionary *testAttributes = [NSMutableDictionary dictionary];
     [testAttributes setObject:@"Groucho" forKey:@"Favorite Mood"];
@@ -107,12 +120,12 @@
 
 - (void) testHasAttributes
 {
-    NSURL *targetURL = [self generatedTestURL];
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
     /* Create a test file */
     
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
+
     
     NSMutableDictionary *testAttributes = [NSMutableDictionary dictionary];
     [testAttributes setObject:@"Groucho" forKey:@"Favorite Mood"];
@@ -133,12 +146,12 @@
 
 - (void) testRemoveNonexistentAttribute
 {
-    NSURL *targetURL = [self generatedTestURL];
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
     /* Create a test file */
     
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
+
     
     /* Removing non-existent attribs is OK. */
     BOOL didRemove = [targetURL removeExtendedAttributeWithName:@"Jughead" error:&error];
@@ -146,29 +159,29 @@
 }
 
 - (void) testAddRemoveSingleAttribute
-{    
-    NSURL *targetURL = [self generatedTestURL];
+{
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     
     /* Create a test file */
     
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
+
     
     NSError *error = nil;
-    NSString *testName = @"net.standardorbit.latinPlaceholderText";
-    id testValue = @"Lorem ipsum dolor sit amet";
+    NSString *attribName = @"net.standardorbit.latinPlaceholderText";
+    id attribValue = @"Lorem ipsum dolor sit amet";
     
     /* Test setting an extended attribute value */
     
-    STAssertTrue ( [targetURL setExtendedAttributeValue:testValue forName:testName error:&error], @"%@", error);
+    STAssertTrue ( [targetURL setExtendedAttributeValue:attribValue forName:attribName error:&error], @"%@", error);
     
     /* Test retrieving the extended attribute value */
     
-    id retrievedValue = [targetURL valueOfExtendedAttributeWithName:testName error:&error];
+    id retrievedValue = [targetURL valueOfExtendedAttributeWithName:attribName error:&error];
     STAssertNotNil (retrievedValue, @"%@", error);
     
     /* Remove the extended attribute */
     
-    BOOL didRemove = [targetURL removeExtendedAttributeWithName:testName error:&error];
+    BOOL didRemove = [targetURL removeExtendedAttributeWithName:attribName error:&error];
     STAssertTrue (didRemove, @"%@; %@", error, [error userInfo]);
 }
 
@@ -177,12 +190,9 @@
 
 - (void) testStringAttribute
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
-    /* Create a test file */
-    
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
     
     NSString *flog = @"flog";
     BOOL didSet = [targetURL setExtendedAttributeValue:flog forName:@"flogger" error:&error];
@@ -198,12 +208,9 @@
 
 - (void) testArrayAttribute
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
-    
-    /* Create a test file */
-    
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
+
     
     NSArray *colors = [NSArray arrayWithObjects:@"red", @"orange", @"yellow", @"green", @"blue", @"violet", nil];
     STAssertTrue ([targetURL setExtendedAttributeValue:colors forName:@"colors" error:&error], @"%@", error);
@@ -217,12 +224,8 @@
 
 - (void) testDictionaryAttribute
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
-    
-    /* Create a test file */
-    
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
     
     NSMutableDictionary *movieInfo = [NSMutableDictionary dictionary];
     [movieInfo setObject:@"Star Wars" forKey:@"title"];
@@ -242,12 +245,10 @@
 
 - (void) testNumberAttribute
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
     /* Create a test file */
-    
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
     
     id testNumber = [NSNumber numberWithFloat:6.28];
     
@@ -257,17 +258,13 @@
     id retrievedValue = [targetURL valueOfExtendedAttributeWithName:@"number" error:&error];
     STAssertNotNil (retrievedValue, @"%@", error);
     STAssertTrue ([retrievedValue isKindOfClass:[NSNumber class]], @"postcondition violated");
-    STAssertTrue ([testNumber isEqualToNumber:retrievedValue], @"postcondition violated");  
+    STAssertTrue ([testNumber isEqualToNumber:retrievedValue], @"postcondition violated");
 }
 
 - (void) testNullAttribute
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
-    
-    /* Create a test file */
-    
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
     
     id testNull = [NSNull null];
     
@@ -277,31 +274,28 @@
 
 - (void) testBooleanYes
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
-    /* Create a test file */
-    
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
     
     id testBoolean = (id)kCFBooleanTrue;
     STAssertTrue ([targetURL setExtendedAttributeValue:testBoolean forName:@"boolean" error:&error], @"%@", error);
-
+    
     error = nil;
     id retrievedValue = [targetURL valueOfExtendedAttributeWithName:@"boolean" error:&error];
     STAssertNotNil (retrievedValue, @"%@", error);
     STAssertTrue ([retrievedValue isKindOfClass:[NSNumber class]], @"postcondition violated");
-    STAssertTrue ([testBoolean isEqualToNumber:retrievedValue], @"postcondition violated"); 
+    STAssertTrue ([testBoolean isEqualToNumber:retrievedValue], @"postcondition violated");
 }
 
 - (void) testBooleanNo
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
     /* Create a test file */
     
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
+
     
     id testBoolean = (id)kCFBooleanFalse;
     STAssertTrue ([targetURL setExtendedAttributeValue:testBoolean forName:@"boolean" error:&error], @"%@", error);
@@ -310,7 +304,7 @@
     id retrievedValue = [targetURL valueOfExtendedAttributeWithName:@"boolean" error:&error];
     STAssertNotNil (retrievedValue, @"%@", error);
     STAssertTrue ([retrievedValue isKindOfClass:[NSNumber class]], @"postcondition violated");
-    STAssertTrue ([testBoolean isEqualToNumber:retrievedValue], @"postcondition violated"); 
+    STAssertTrue ([testBoolean isEqualToNumber:retrievedValue], @"postcondition violated");
 }
 
 #pragma mark
@@ -318,14 +312,14 @@
 
 - (void) testAttributeNameTooLong
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
     /* Create a test file */
     
-    STAssertTrue ([[NSFileManager defaultManager] createFileAtPath:[targetURL path]  contents:[NSData data] attributes:nil], @"Couldn't create test file");
+
     
-    NSArray *wordList = [NSArray arrayWithObjects:@"red", @"orange", @"yellow", @"green", @"blue", @"violet", nil];    
+    NSArray *wordList = [NSArray arrayWithObjects:@"red", @"orange", @"yellow", @"green", @"blue", @"violet", nil];
     NSMutableString *WayTooLongName = [NSMutableString string];
     while ([WayTooLongName length] <= XATTR_MAXNAMELEN)
     {
@@ -339,7 +333,7 @@
 
 - (void) testAddAttributeEmptyName
 {
-    NSURL *targetURL = [self generatedTestURL];    
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
     
     // test empty name
@@ -353,7 +347,7 @@
 - (void) testAccessAttributeEmptyName
 {
     NSError *error = nil;
-    NSURL *targetURL = [self generatedTestURL];
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     
     // test empty name
     STAssertThrows ([targetURL valueOfExtendedAttributeWithName:@"" error:&error], @"expected param exception");
@@ -366,7 +360,7 @@
 - (void) testRemoveAttributeEmptyName
 {
     NSError *error = nil;
-    NSURL *targetURL = [self generatedTestURL];
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     
     // test empty name
     STAssertThrows ([targetURL removeExtendedAttributeWithName:@"" error:&error], @"expected param exception");
@@ -380,7 +374,7 @@
 - (void) testHasAttributeWithEmptyName
 {
     NSError *error = nil;
-    NSURL *targetURL = [self generatedTestURL];
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     
     // test empty name
     STAssertThrows ([targetURL hasExtendedAttributeWithName:@""], @"expected param exception");

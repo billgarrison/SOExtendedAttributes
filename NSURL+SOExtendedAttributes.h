@@ -36,31 +36,22 @@
  
  ** Use with iCloud Backup **
  
- iCloud (as of iOS 5.0.1) honors the extended attribute `@"com.apple.MobileMeBackup"` as a flag to exclude a file system item from iCloud backup. This category defines the constant `iCloudDoNotBackupAttributeName` to work with this iCloud behavior.
+ Note 2013-06-03: see [Apple Tech QA 1719](http://developer.apple.com/library/ios/#qa/qa1719/) for the recommended way to mark a file for exclusion from iCloud backup. Hint: don't use the @"com.apple.MobileMeBackup" extended attribute.
  
- ** Constants **
+ ** Error Reporting **
  
- `iCloudDoNotBackupAttributeName = @"com.apple.MobileMeBackup"`
- 
- E.g. To determine if a file system item is marked to be excluded from iCloud backup:
- 
-    NSURL fileURL = ...;
-    BOOL isExcludedFromiCloudBackup = [fileURL hasExtendedAttributeWithName:iCloudDoNotBackupAttribute];
- 
+ SOExtendedAttributes reports errors under the domain `SOExtendedAttributesErrorDomain`. When multiple errors occur on getting or setting extended attributes in a batch, those errors are collected in an NSArray and reported via error's -userInfo dictionary under `SOUnderlyingErrorsKey`.
  */
 
 extern NSString * const iCloudDoNotBackupAttributeName;
 extern NSString * const SOExtendedAttributesErrorDomain;
+extern NSString * const SOUnderlyingErrorsKey;
 
 enum {
     SOExtendedAttributesValueCantBeSerialized = 1968,
     SOExtendedAttributesSetValueError,
     SOExtendedAttributesGetValueError,
 };
-
-/** When multiple errors are reported from the xattr API, they are collected and reported under this -[NSError userInfo] dictionary key. */
-extern NSString * const SOUnderlyingErrorsKey;
-
 
 @interface NSURL (SOExtendedAttributes)
 
@@ -70,7 +61,7 @@ extern NSString * const SOUnderlyingErrorsKey;
  
  Return all extended attributes that the current user account has permission to access. Attributes will include the HFS compression extended attribute if present.
  
- @param outError A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.
+ @param outError If an error occurs, upon return contains an NSError object that describes the problem. Pass NULL if you're not interested in error reporting.
  @return An NSDictionary object that describes the extended attributes of the file system object, or nil if an error occurred.
  */
 - (NSDictionary *) extendedAttributesWithError:(NSError * __autoreleasing *)outError;
@@ -81,10 +72,10 @@ extern NSString * const SOUnderlyingErrorsKey;
  
  If the attributes dictionary holds a value object that cannot be encoded as a plist, an NSError with code `SOExtendedAttributesValueCantBeSerialized` is returned via the outError parameter. 
  
- On error, a partial number of the given extended attributes may have been successfully set. The error returned through outError will indicate which attributes could not be set. In particular, `[[*outError userInfo] objectForKey:NSUnderlyingErrorKey]`
+ On error, one or more of the given extended attributes may have failed to be set. Any underlying errors are reported via the -userInfo dictionary as an NSArray under the key `SOUnderlyingErrorsKey`.
  
  @param attributes The extended attribute names and values to be set. All values be instances of NSData, NSString, NSArray, NSDictionary, NSDate or NSNumber.
- @param outError A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.
+ @param outError If an error occurs, upon return contains an NSError object that describes the problem. Pass NULL if you're not interested in error reporting.
  @return YES if all given attribute values were set. NO if there was an error setting one or more of the values.
  */
 - (BOOL) setExtendedAttributes:(NSDictionary *)attributes error:(NSError * __autoreleasing *)outError;
