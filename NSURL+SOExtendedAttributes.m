@@ -13,10 +13,12 @@
 #import <Foundation/Foundation.h>
 #import "NSURL+SOExtendedAttributes.h"
 #import <sys/xattr.h>
+#include <unistd.h>
 
 NSString * const iCloudDoNotBackupAttributeName = @"com.apple.MobileBackup";
 NSString * const SOExtendedAttributesErrorDomain = @"SOExtendedAttributesErrorDomain";
-NSString * const SOUnderlyingErrorsKey = @"SOUnderlyingErrorsKey";
+NSString * const SOUnderlyingErrorsKey = @"SOUnderlyingErrors";
+NSString * const SOExtendedAttributeNameKey = @"SOExtendedAttributeName";
 
 /* Use default options with xattr API that don't resolve symlinks and show the HFS compression extended attribute. */
 
@@ -26,12 +28,28 @@ static int xattrDefaultOptions = XATTR_NOFOLLOW | XATTR_SHOWCOMPRESSION;
 static inline NSError *SOPOSIXErrorForURL(NSURL *url)
 {
     int posixErr = errno;
-    NSString *errDesc = [NSString stringWithUTF8String:strerror(posixErr)];
+    NSString *errDesc;
+    
+    switch (posixErr)
+    {
+        case ENAMETOOLONG:
+            errDesc = @"Attribute name too long";
+            break;
+            
+        case E2BIG:
+            errDesc = @"Attribute too big";
+            break;
+            
+        default:
+            errDesc = [NSString stringWithUTF8String: strerror(posixErr)];
+            break;
+    }
+    
+
     NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
     [errInfo setObject:errDesc forKey:NSLocalizedDescriptionKey];
     
-    if (url)
-    {
+    if (url) {
         [errInfo setObject:url forKey:NSURLErrorKey];
     }
     
@@ -40,6 +58,25 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
 
 @implementation NSURL (SOExtendedAttributes)
 
+
+- (NSUInteger) maximumExtendedAttributesSize
+{
+    /* Taken from Bombich Software's mods for rsync 3.0.6; see <http://www.bombich.com/software/opensource/rsync_3.0.6-bombich_20121219.diff> */
+    
+    long numberOfBits;
+    
+    numberOfBits = pathconf ([[self path] fileSystemRepresentation], _PC_XATTR_SIZE_BITS);
+    NSUInteger maximumSize = 0;
+    // Determine the maximum size allowed for non-resource-fork xattrs
+    if (numberOfBits > 0) {
+        if (numberOfBits == 18 || numberOfBits > 31)
+            maximumSize = 131022; // 128KB - 50 bytes; determined experimentally in testing under 10.8
+        else
+            maximumSize = exp2 (numberOfBits) - 1;
+    }
+
+    return maximumSize;
+}
 
 - (NSArray *) namesOfExtendedAttributesWithError:(NSError * __autoreleasing *)outError
 {
@@ -75,7 +112,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         if (bufferSize == -1)
         {
             if (namesBuffer) free(namesBuffer);
-
+            
             attributeNames = nil;
             if (outError) *outError = SOPOSIXErrorForURL(self);
             return nil;
@@ -124,50 +161,48 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
 
 - (NSDictionary *) extendedAttributesWithError:(NSError * __autoreleasing *)outError
 {
-    if (![self isFileURL]) [NSException raise:NSInternalInconsistencyException format:@"%s only valid on file URLs", __PRETTY_FUNCTION__];
+    /* Get names of all extended attributes associated with this URL. */
     
-    NSMutableDictionary *xattrs = nil;
+    NSArray *attributeNames = [self namesOfExtendedAttributesWithError:outError];
+    if (attributeNames == nil) return nil;
     
-    @autoreleasepool
+    /* Collect the value for each found extended attribute. */
+    
+    NSMutableDictionary *collectedAttributes = [[NSMutableDictionary alloc] initWithCapacity:[attributeNames count]];
+    NSMutableArray *collectedErrors = [NSMutableArray array];
+    
+    for (NSString *name in attributeNames)
     {
-        NSArray *attributeNames = [self namesOfExtendedAttributesWithError:outError];
-        if (attributeNames == nil) return nil;
+        NSError *error = nil;
+        id value = [self valueOfExtendedAttributeWithName:name error:&error];
         
-        /* Pull the value for each found extended attribute. */
+        /* Collect the value or collect the error. */
         
-        xattrs = [[NSMutableDictionary alloc] initWithCapacity:[attributeNames count]];
-        
-        NSMutableArray *collectedErrors = [NSMutableArray array];
-        
-        for (NSString *name in attributeNames)
-        {
-            NSError *error = nil;
-            id value = [self valueOfExtendedAttributeWithName:name error:&error];
-            
-            if (value)
-            {
-                [xattrs setObject:value forKey:name];
-            }
-            else
-            {
-                if (error) [collectedErrors addObject:error];
-            }
+        if (value) {
+            [collectedAttributes setObject:value forKey:name];
+        }
+        else if (error) {
+            [collectedErrors addObject:error];
+            break;
         }
         
-        /* Did we get any errors? */
-        
-        BOOL hasErrors = [collectedErrors count] > 0;
-        if (hasErrors && outError)
-        {
-            NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
-            [errInfo setObject:NSLocalizedString(@"Failed to get one or more extended attribute values", @"Error message description for SOExtendedAttributesGetValueError") forKey:NSLocalizedDescriptionKey];
-            [errInfo setObject:self forKey:NSURLErrorKey];
-            [errInfo setObject:collectedErrors forKey:SOUnderlyingErrorsKey];
-            *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesGetValueError userInfo:errInfo];
-        }
     }
     
-    return xattrs;
+    /* Did we get any errors? */
+    
+    BOOL hasErrors = [collectedErrors count] > 0;
+    if (hasErrors && outError)
+    {
+        collectedAttributes = nil;
+        
+        NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
+        [errInfo setObject:NSLocalizedString(@"Failed to get one or more extended attribute values", @"Error message description for SOExtendedAttributesGetValueError") forKey:NSLocalizedDescriptionKey];
+        [errInfo setObject:self forKey:NSURLErrorKey];
+        [errInfo setObject:collectedErrors forKey:SOUnderlyingErrorsKey];
+        *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesGetValueError userInfo:errInfo];
+    }
+    
+    return collectedAttributes;
 }
 
 - (BOOL) setExtendedAttributes:(NSDictionary *)attributes error:(NSError * __autoreleasing *)outError
@@ -178,16 +213,59 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     
     if ([attributes count] == 0) return YES;
     
-    
     /* Attempt to set all attribute values in the dictionary. Any individual errors are collected and returned as a group. */
     
-    __block NSMutableArray *collectedErrors = [NSMutableArray array];
-    [attributes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    __block NSMutableArray *collectedErrors = nil;
+    if (outError) {
+        collectedErrors = [NSMutableArray arrayWithCapacity:[attributes count]];
+    }
+    [attributes enumerateKeysAndObjectsUsingBlock:^(id name, id value, BOOL *stop) {
         NSError *error = nil;
-        if (NO == [self setExtendedAttributeValue:obj forName:key error:&error])
+        
+        /* Preflight passed value for binary plist serialization. MUST do this because NSPropertyListSerialization doesn't ALWAYS return an error when something goes wrong, such as attempting to serialize an NSNull. */
+        
+        if ( ! [NSPropertyListSerialization propertyList:value isValidForFormat:NSPropertyListBinaryFormat_v1_0])
         {
-            [collectedErrors addObject:error];
+            if (collectedErrors) {
+                NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
+                [errInfo setObject:name forKey:SOExtendedAttributeNameKey];
+                [errInfo setObject:[NSString stringWithFormat:@"Value of class %@ cannot be serialized into a plist", NSStringFromClass([value class])] forKey:NSLocalizedDescriptionKey];
+                [errInfo setObject:value forKey:@"value"];
+                error = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesValueCantBeSerialized userInfo:errInfo];
+                [collectedErrors addObject:error];
+            }
+        } else {
+            
+            /* Serialize value to binary plist */
+            
+            NSError *dataError = nil;
+            NSData *data = [NSPropertyListSerialization dataWithPropertyList:value format:NSPropertyListBinaryFormat_v1_0 options:0 error:&dataError];
+            if (data == nil) {
+                if (collectedErrors) {
+                    NSMutableDictionary *augmentedErrorInfo = [[dataError userInfo] mutableCopy];
+                    [augmentedErrorInfo setObject:name forKey:SOExtendedAttributeNameKey];
+                    error = [NSError errorWithDomain:[dataError domain] code:[dataError code] userInfo:augmentedErrorInfo];
+                    [collectedErrors addObject:error];
+                }
+            }
+            else {
+                
+                /* Set data as extended attribute value */
+                
+                int err = setxattr ( [[self path] fileSystemRepresentation], [name UTF8String], [data bytes], [data length], 0, XATTR_NOFOLLOW);
+                if (err != 0)
+                {
+                    if (collectedErrors) {
+                        NSError *posixError = SOPOSIXErrorForURL(self);
+                        NSMutableDictionary *augmentedErrorInfo = [[posixError userInfo] mutableCopy];
+                        [augmentedErrorInfo setObject:name forKey:SOExtendedAttributeNameKey];
+                        error = [NSError errorWithDomain:[posixError domain] code:[posixError code] userInfo:augmentedErrorInfo];
+                        [collectedErrors addObject:error];
+                    }
+                }
+            }
         }
+        
     }];
     
     /* Did we get any errors? */
@@ -195,14 +273,21 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     BOOL hasErrors = [collectedErrors count] > 0;
     if (hasErrors && outError)
     {
-        NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
-        [errInfo setObject:NSLocalizedString(@"Failed to set one or more extended attributes.", @"Error message description for SOExtendedAttributesSetValueError.")
- forKey:NSLocalizedDescriptionKey];
-        [errInfo setObject:self forKey:NSURLErrorKey];
-        [errInfo setObject:collectedErrors forKey:SOUnderlyingErrorsKey];
-        *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesSetValueError userInfo:errInfo];
+        if ([collectedErrors count] == 1) {
+            *outError = [collectedErrors lastObject];
+        } else {
+            /* Bundle up multiple collected errors using SOUnderlyingErrorsKey */
+            NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
+            [errInfo setObject:NSLocalizedString(@"Failed to set one or more extended attributes.", @"Error message description for SOExtendedAttributesSetValueError.")
+                        forKey:NSLocalizedDescriptionKey];
+            [errInfo setObject:self forKey:NSURLErrorKey];
+            [errInfo setObject:collectedErrors forKey:SOUnderlyingErrorsKey];
+            *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesSetValueError userInfo:errInfo];
+        }
         return NO;
     }
+    
+    /* Got here? No errors. */
     
     return YES;
 }
@@ -211,8 +296,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
 
 - (BOOL) hasExtendedAttributeWithName:(NSString *)name
 {
-    if (![self isFileURL]) [NSException raise:NSInternalInconsistencyException format:@"%s only valid on file URLs", __PRETTY_FUNCTION__];
-    if (!name || [name isEqualToString:@""]) [NSException raise:NSInvalidArgumentException format:@"%s name parameter can't be nil", __PRETTY_FUNCTION__];
+    if (!name || [name isEqualToString:@""]) return NO;
     
     NSError *error = nil;
     NSArray *attributeNames = [self namesOfExtendedAttributesWithError:&error];
@@ -231,36 +315,38 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     
     id retrievedValue = nil;
     
-    @autoreleasepool
-    {
-        /* Get the size of the attribute value and pull it into an NSData is possible */
-        
-        const char *itemPath = [[self path] fileSystemRepresentation];
-        void *buffer = NULL;
-        ssize_t dataSize = getxattr (itemPath, [name UTF8String], NULL, SIZE_MAX, 0, xattrDefaultOptions);
-        if (dataSize > 0)
-        {
-            buffer = calloc(1, dataSize);
-            dataSize = getxattr (itemPath, [name UTF8String], buffer, dataSize, 0, xattrDefaultOptions );
+    
+    /* Get the size of the attribute value and pull it into an NSData is possible */
+    
+    const char *itemPath = [[self path] fileSystemRepresentation];
+    void *valueDataBuffer = NULL;
+    ssize_t dataSize = getxattr (itemPath, [name UTF8String], NULL, SIZE_MAX, 0, xattrDefaultOptions);
+    if (dataSize != -1) {
+        valueDataBuffer = calloc(1, dataSize);
+        dataSize = getxattr (itemPath, [name UTF8String], valueDataBuffer, dataSize, 0, xattrDefaultOptions );
+    }
+    
+    /* */
+    
+    if (dataSize == -1) {
+        /* Clean up memory */
+        if (valueDataBuffer) {
+            free(valueDataBuffer); valueDataBuffer = NULL;
         }
         
-        /* Problemo? Bail out with error, ditching all collected attributes */
+        if (outError) {
+            NSError *posixError = SOPOSIXErrorForURL(self);
+            NSMutableDictionary *augmentedErrorInfo = [[posixError userInfo] mutableCopy];
+            [augmentedErrorInfo setObject:name forKey:SOExtendedAttributeNameKey];
+            *outError = [NSError errorWithDomain:[posixError domain] code:[posixError code] userInfo:augmentedErrorInfo];
+        }
         
-        if (dataSize == -1)
-        {
-            if (outError) *outError = SOPOSIXErrorForURL(self);
-            if (buffer) {
-                free(buffer); buffer = NULL;
-            }
-            
-        } else {
-            
-            /* Translate from encoded binary plist */
-            NSData *data = [NSData dataWithBytesNoCopy:buffer length:dataSize freeWhenDone:YES];
+    } else {
+        /* Translate from encoded binary plist */
+        if (valueDataBuffer) {
+            NSData *data = [NSData dataWithBytesNoCopy:valueDataBuffer length:dataSize freeWhenDone:YES];
             retrievedValue = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:outError];
         }
-        
-
     }
     
     return retrievedValue;
@@ -268,35 +354,13 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
 
 - (BOOL) setExtendedAttributeValue:(id)value forName:(NSString *)name error:(NSError * __autoreleasing *)outError
 {
-    if (![self isFileURL]) [NSException raise:NSInternalInconsistencyException format:@"%s only valid on file URLs", __PRETTY_FUNCTION__];
-    if (!name || [name isEqualToString:@""]) [NSException raise:NSInvalidArgumentException format:@"%s name parameter can't be nil", __PRETTY_FUNCTION__];
-    
-    /* If value can be serialized as a binary plist, do so and store in extended attributes */
-    
-    if ([NSPropertyListSerialization propertyList:value isValidForFormat:NSPropertyListBinaryFormat_v1_0])
-    {
-        NSData *data = [NSPropertyListSerialization dataWithPropertyList:value format:NSPropertyListBinaryFormat_v1_0 options:0 error:outError];
-        
-        int err = setxattr ( [[self path] fileSystemRepresentation], [name UTF8String], [data bytes], [data length], 0, XATTR_NOFOLLOW);
-        if (err != 0)
-        {
-            if (outError) *outError = SOPOSIXErrorForURL(self);
-            return NO;
-        }
+    BOOL didSet = NO;
+    if (value == nil) {
+        didSet = [self removeExtendedAttributeWithName:name error:outError];
+    } else {
+        didSet = [self setExtendedAttributes:@{name : value} error:outError];
     }
-    else
-    {
-        if (outError)
-        {
-            NSMutableDictionary *errInfo = [NSMutableDictionary dictionary];
-            [errInfo setObject:[NSString stringWithFormat:@"Value of class %@ cannot be serialized into a plist", NSStringFromClass([value class])] forKey:NSLocalizedDescriptionKey];
-            [errInfo setObject:value forKey:@"value"];
-            *outError = [NSError errorWithDomain:SOExtendedAttributesErrorDomain code:SOExtendedAttributesValueCantBeSerialized userInfo:errInfo];
-        }
-        return NO;
-    }
-    
-    return YES;
+    return didSet;
 }
 
 - (BOOL) removeExtendedAttributeWithName:(NSString *)name error:(NSError * __autoreleasing *)outError
@@ -310,7 +374,12 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
         /* Ignore any ENOATTR error ('attribute not found'), but capture and return all others. */
         if (errno != ENOATTR)
         {
-            if (outError) *outError = SOPOSIXErrorForURL(self);
+            if (outError) {
+                NSError *posixError = SOPOSIXErrorForURL(self);
+                NSMutableDictionary *augmentedErrorInfo = [[posixError userInfo] mutableCopy];
+                [augmentedErrorInfo setObject:name forKey:SOExtendedAttributeNameKey];
+                *outError = [NSError errorWithDomain:[posixError domain] code:[posixError code] userInfo:augmentedErrorInfo];
+            }
             return NO;
         }
     }

@@ -1,7 +1,7 @@
 /*
  NSURL+SOExtendedAttributes
  
- Copyright 2012 Standard Orbit Software, LLC. All rights reserved.
+ Copyright 2013 Standard Orbit Software, LLC. All rights reserved.
  License at the bottom of the file.
  */
 
@@ -54,6 +54,17 @@ enum {
 };
 
 @interface NSURL (SOExtendedAttributes)
+
+/**
+The maximum size in bytes for an extended attribute on the receiver.
+ 
+ Uses pathconf(2) to determine the maximum number of bytes that an extended attribute can hold. This is a computed and approximate value because the system does not report a maximum extended attribute size directly; instead, it reports the number of bits by the file system object to used to hold the maximum extended attribute size.
+ 
+ The reported maximum extended attribute size for HFS+ on Mac OS X 10.8 is 128KB (131072 bytes), but experimentally, it is actually 50 bytes less: 131022 bytes.
+ 
+ @return The maximum size in bytes for an extended attribute on the receiver.
+ */
+- (NSUInteger) maximumExtendedAttributesSize;
 
 /** @name Accessing attributes in batches */
 
@@ -124,7 +135,7 @@ enum {
 @end
 
 /*
- Copyright (c) 2012, Standard Orbit Software, LLC. All rights reserved.
+ Copyright (c) 2012-2013, Standard Orbit Software, LLC. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  
