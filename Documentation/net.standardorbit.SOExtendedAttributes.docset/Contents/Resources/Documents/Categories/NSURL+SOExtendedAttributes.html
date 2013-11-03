@@ -48,6 +48,8 @@
 	
 	<option value="//api/name/hasExtendedAttributeWithName:">&nbsp;&nbsp;&nbsp;&nbsp;- hasExtendedAttributeWithName:</option>
 	
+	<option value="//api/name/maximumExtendedAttributesSize">&nbsp;&nbsp;&nbsp;&nbsp;- maximumExtendedAttributesSize</option>
+	
 	<option value="//api/name/removeExtendedAttributeWithName:error:">&nbsp;&nbsp;&nbsp;&nbsp;- removeExtendedAttributeWithName:error:</option>
 	
 	<option value="//api/name/setExtendedAttributeValue:forName:error:">&nbsp;&nbsp;&nbsp;&nbsp;- setExtendedAttributeValue:forName:error:</option>
@@ -93,6 +95,8 @@
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/extendedAttributesWithError:">extendedAttributesWithError:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/hasExtendedAttributeWithName:">hasExtendedAttributeWithName:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/maximumExtendedAttributesSize">maximumExtendedAttributesSize</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/removeExtendedAttributeWithName:error:">removeExtendedAttributeWithName:error:</a></span></li>
 	
@@ -156,7 +160,7 @@
 
 <p><strong> Error Reporting </strong></p>
 
-<p>SOExtendedAttributes reports errors under the domain <code>SOExtendedAttributesErrorDomain</code>. When multiple errors occur on getting or setting extended attributes in a batch, the errors are collected in an NSArray and reported via error&rsquo;s -userInfo dictionary under <code>SOUnderlyingErrorsKey</code>.</p>
+<p>SOExtendedAttributes reports errors under the domain <code>SOExtendedAttributesErrorDomain</code>. When multiple errors occur on getting or setting extended attributes in a batch, those errors are collected in an NSArray and reported via error&rsquo;s -userInfo dictionary under <code>SOUnderlyingErrorsKey</code>.</p>
 					</div>
 					
 					
@@ -166,6 +170,21 @@
 					<div class="section section-tasks">
 						<a title="Tasks" name="tasks"></a>
 						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						<h3 class="subsubtitle task-title">Other Methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/maximumExtendedAttributesSize">&ndash;&nbsp;maximumExtendedAttributesSize</a></code>
+		<span class="tooltip"><p>The maximum size in bytes for an extended attribute on the receiver.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
 						
 						
 						<a title="Accessing attributes in batches" name="task_Accessing attributes in batches"></a>
@@ -266,7 +285,7 @@
 		
 		<dl class="argument-def parameter-def">
 			<dt><em>outError</em></dt>
-			<dd><p>A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you&rsquo;re not interesting in error reporting.</p></dd>
+			<dd><p>If an error occurs, upon return contains an NSError object that describes the problem. Pass NULL if you&rsquo;re not interested in error reporting.</p></dd>
 		</dl>
 		
 	</div>
@@ -339,6 +358,52 @@
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
 		<p>Sometimes, you&rsquo;re only interested in the presence or absence of an extended attribute on a given URL. E.g. @&ldquo;com.apple.MobileMeBackup&rdquo;.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">NSURL+SOExtendedAttributes.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/maximumExtendedAttributesSize" title="maximumExtendedAttributesSize"></a>
+	<h3 class="subsubtitle method-title">maximumExtendedAttributesSize</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The maximum size in bytes for an extended attribute on the receiver.</p>
+	</div>		
+	
+	
+	<div class="method-subsection method-declaration"><code>- (NSUInteger)maximumExtendedAttributesSize</code></div>
+	
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>The maximum size in bytes for an extended attribute on the receiver.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Uses pathconf(2) to determine the maximum number of bytes that an extended attribute can hold. This is a computed and approximate value because the system does not report a maximum extended attribute size directly; instead, it reports the number of bits by the file system object to used to hold the maximum extended attribute size.</p>
+
+<p>The reported maximum extended attribute size for HFS+ on Mac OS X 10.8 is 128KB (131072 bytes), but experimentally, it is actually 50 bytes less: 131022 bytes.</p>
 	</div>
 	
 	
@@ -492,7 +557,7 @@
 		
 		<dl class="argument-def parameter-def">
 			<dt><em>outError</em></dt>
-			<dd><p>A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you&rsquo;re not interesting in error reporting.</p></dd>
+			<dd><p>If an error occurs, upon return contains an NSError object that describes the problem. Pass NULL if you&rsquo;re not interested in error reporting.</p></dd>
 		</dl>
 		
 	</div>
@@ -514,7 +579,7 @@
 
 <p>If the attributes dictionary holds a value object that cannot be encoded as a plist, an NSError with code <code>SOExtendedAttributesValueCantBeSerialized</code> is returned via the outError parameter.</p>
 
-<p>On error, a partial number of the given extended attributes may have been successfully set. The error returned through outError will indicate which attributes could not be set. In particular, <code>[[*outError userInfo] objectForKey:NSUnderlyingErrorKey]</code></p>
+<p>On error, one or more of the given extended attributes may have failed to be set. Any underlying errors are reported via the -userInfo dictionary as an NSArray under the key <code>SOUnderlyingErrorsKey</code>.</p>
 	</div>
 	
 	
@@ -598,7 +663,7 @@
 				<div id="footer">
 					<hr />
 					<div class="footer-copyright">
-						<p><span class="copyright">&copy; 2013 Standard Orbit. All rights reserved. (Last updated: 2013-10-31)</span><br />
+						<p><span class="copyright">&copy; 2013 Standard Orbit. All rights reserved. (Last updated: 2013-11-02)</span><br />
 						
 						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.1 (build 840)</a>.</span></p>
 						

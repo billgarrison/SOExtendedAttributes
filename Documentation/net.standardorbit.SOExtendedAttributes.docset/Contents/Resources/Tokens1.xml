@@ -12,6 +12,17 @@
 		
 		
 		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSURL(SOExtendedAttributes)/maximumExtendedAttributesSize</TokenIdentifier>
+			<Abstract type="html">The maximum size in bytes for an extended attribute on the receiver.</Abstract>
+			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>			
+			
+			<Declaration>- (NSUInteger)maximumExtendedAttributesSize</Declaration>
+			
+			<ReturnValue><Abstract type="html">The maximum size in bytes for an extended attribute on the receiver.</Abstract></ReturnValue>
+			<Anchor>//api/name/maximumExtendedAttributesSize</Anchor>
+		</Token>
+		
+		<Token>
 			<TokenIdentifier>//apple_ref/occ/intfm/NSURL(SOExtendedAttributes)/extendedAttributesWithError:</TokenIdentifier>
 			<Abstract type="html">Returns the extended attributes of the file system item at this URL.</Abstract>
 			<DeclaredIn>NSURL+SOExtendedAttributes.h</DeclaredIn>			
@@ -20,7 +31,7 @@
 			<Parameters>
 				<Parameter>
 					<Name>outError</Name>
-					<Abstract type="html">A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.</Abstract>
+					<Abstract type="html">If an error occurs, upon return contains an NSError object that describes the problem. Pass NULL if you're not interested in error reporting.</Abstract>
 				</Parameter>
 			</Parameters>
 			<ReturnValue><Abstract type="html">An NSDictionary object that describes the extended attributes of the file system object, or nil if an error occurred.</Abstract></ReturnValue>
@@ -39,7 +50,7 @@
 					<Abstract type="html">The extended attribute names and values to be set. All values be instances of NSData, NSString, NSArray, NSDictionary, NSDate or NSNumber.</Abstract>
 				</Parameter><Parameter>
 					<Name>outError</Name>
-					<Abstract type="html">A pointer to an error object. On return, if an error has occurred, this pointer references an actual error object containing the error information. Pass NULL if you're not interesting in error reporting.</Abstract>
+					<Abstract type="html">If an error occurs, upon return contains an NSError object that describes the problem. Pass NULL if you're not interested in error reporting.</Abstract>
 				</Parameter>
 			</Parameters>
 			<ReturnValue><Abstract type="html">YES if all given attribute values were set. NO if there was an error setting one or more of the values.</Abstract></ReturnValue>
