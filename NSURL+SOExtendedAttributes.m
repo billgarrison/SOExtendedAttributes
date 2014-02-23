@@ -154,6 +154,8 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     
     /* */
     
+    NSData *xattrData = nil;
+    
     if (dataSize == -1) {
         /* Clean up memory */
         if (valueDataBuffer) {
@@ -167,9 +169,11 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
             *outError = [NSError errorWithDomain:[posixError domain] code:[posixError code] userInfo:augmentedErrorInfo];
         }
         
+    } else {
+        xattrData = [[NSData alloc] initWithBytesNoCopy:valueDataBuffer length:dataSize freeWhenDone:YES];
     }
     
-    return [[NSData alloc] initWithBytesNoCopy:valueDataBuffer length:dataSize freeWhenDone:YES];
+    return xattrData;
 }
 
 - (BOOL) setExtendedAttributeData:(NSData *)data name:(NSString *)name error:(NSError * __autoreleasing *)outError

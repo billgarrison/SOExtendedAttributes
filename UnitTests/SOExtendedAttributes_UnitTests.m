@@ -135,17 +135,26 @@
     STAssertFalse ([targetURL hasExtendedAttributeWithName:@"Total Eclipse of the Heart"], @"postcondition violated");
 }
 
-#pragma mark -
-#pragma mark Removal Tests
+#pragma mark - Getter Tests
+
+- (void) testGetNonexistentAttribute
+{
+    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
+    NSError *error = nil;
+    
+    /* Ask for value of nonexistent extended attribute */
+    id xattrValue = [targetURL valueOfExtendedAttributeWithName:@"geordi.laforge" error:&error];
+    
+    STAssertNil (xattrValue, @"Expected nil value for nonexistent extended attribute");
+    STAssertTrue (error.code == ENOATTR, @"Expected 'attribute not found' error");
+}
+
+#pragma mark - Removal Tests
 
 - (void) testRemoveNonexistentAttribute
 {
     STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
     NSError *error = nil;
-    
-    /* Create a test file */
-    
-
     
     /* Removing non-existent attribs is OK. */
     BOOL didRemove = [targetURL removeExtendedAttributeWithName:@"Jughead" error:&error];
@@ -155,10 +164,6 @@
 - (void) testAddRemoveSingleAttribute
 {
     STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
-    
-    /* Create a test file */
-    
-
     
     NSError *error = nil;
     NSString *attribName = @"net.standardorbit.latinPlaceholderText";
