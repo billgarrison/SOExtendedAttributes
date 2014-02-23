@@ -2,7 +2,7 @@
 /*
  NSURL+SOExtendedAttributes
  
- Copyright 2012 Standard Orbit Software, LLC. All rights reserved.
+ Copyright 2012-2014 Standard Orbit Software, LLC. All rights reserved.
  License at the bottom of the file.
  */
 
@@ -57,26 +57,6 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
 }
 
 @implementation NSURL (SOExtendedAttributes)
-
-
-- (NSUInteger) maximumExtendedAttributesSize
-{
-    /* Taken from Bombich Software's mods for rsync 3.0.6; see <http://www.bombich.com/software/opensource/rsync_3.0.6-bombich_20121219.diff> */
-    
-    long numberOfBits;
-    
-    numberOfBits = pathconf ([[self path] fileSystemRepresentation], _PC_XATTR_SIZE_BITS);
-    NSUInteger maximumSize = 0;
-    // Determine the maximum size allowed for non-resource-fork xattrs
-    if (numberOfBits > 0) {
-        if (numberOfBits == 18 || numberOfBits > 31)
-            maximumSize = 131022; // 128KB - 50 bytes; determined experimentally in testing under 10.8
-        else
-            maximumSize = exp2 (numberOfBits) - 1;
-    }
-
-    return maximumSize;
-}
 
 - (NSArray *) namesOfExtendedAttributesWithError:(NSError * __autoreleasing *)outError
 {
@@ -154,6 +134,64 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     }
     
     return attributeNames;
+}
+
+- (NSData *) dataForExtendedAttribute:(NSString *)name error:(NSError * __autoreleasing *)outError
+{
+    if (!name || [name isEqualToString:@""]) {
+        [NSException raise:NSInvalidArgumentException format:@"extended attribute name cannot be empty"];
+    }
+    
+    /* First query for the size of the attribute value, then pull it into an NSData is possible */
+    
+    const char *itemPath = [[self path] fileSystemRepresentation];
+    void *valueDataBuffer = NULL;
+    ssize_t dataSize = getxattr (itemPath, [name UTF8String], NULL, SIZE_MAX, 0, xattrDefaultOptions);
+    if (dataSize != -1) {
+        valueDataBuffer = calloc(1, dataSize);
+        dataSize = getxattr (itemPath, [name UTF8String], valueDataBuffer, dataSize, 0, xattrDefaultOptions );
+    }
+    
+    /* */
+    
+    if (dataSize == -1) {
+        /* Clean up memory */
+        if (valueDataBuffer) {
+            free(valueDataBuffer); valueDataBuffer = NULL;
+        }
+        
+        if (outError) {
+            NSError *posixError = SOPOSIXErrorForURL(self);
+            NSMutableDictionary *augmentedErrorInfo = [[posixError userInfo] mutableCopy];
+            augmentedErrorInfo[SOExtendedAttributeNameKey] = name;
+            *outError = [NSError errorWithDomain:[posixError domain] code:[posixError code] userInfo:augmentedErrorInfo];
+        }
+        
+    }
+    
+    return [[NSData alloc] initWithBytesNoCopy:valueDataBuffer length:dataSize freeWhenDone:YES];
+}
+
+- (BOOL) setExtendedAttributeData:(NSData *)data name:(NSString *)name error:(NSError * __autoreleasing *)outError
+{
+    if (!name || [name isEqualToString:@""]) {
+        [NSException raise:NSInvalidArgumentException format:@"extended attribute name cannot be empty"];
+    }
+    
+    /* Set data as extended attribute value */
+    
+    int err = setxattr ( [[self path] fileSystemRepresentation], [name UTF8String], [data bytes], [data length], 0, XATTR_NOFOLLOW);
+    if (err != 0)
+    {
+        if (outError) {
+            NSError *posixError = SOPOSIXErrorForURL(self);
+            NSMutableDictionary *augmentedErrorInfo = [[posixError userInfo] mutableCopy];
+            augmentedErrorInfo[SOExtendedAttributeNameKey] = name;
+            *outError = [NSError errorWithDomain:[posixError domain] code:[posixError code] userInfo:augmentedErrorInfo];
+        }
+    }
+    
+    return (err == 0);
 }
 
 #pragma mark -
@@ -251,17 +289,10 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
             else {
                 
                 /* Set data as extended attribute value */
-                
-                int err = setxattr ( [[self path] fileSystemRepresentation], [name UTF8String], [data bytes], [data length], 0, XATTR_NOFOLLOW);
-                if (err != 0)
-                {
-                    if (collectedErrors) {
-                        NSError *posixError = SOPOSIXErrorForURL(self);
-                        NSMutableDictionary *augmentedErrorInfo = [[posixError userInfo] mutableCopy];
-                        [augmentedErrorInfo setObject:name forKey:SOExtendedAttributeNameKey];
-                        error = [NSError errorWithDomain:[posixError domain] code:[posixError code] userInfo:augmentedErrorInfo];
-                        [collectedErrors addObject:error];
-                    }
+                NSError *xattrError = nil;
+                BOOL didSet = [self setExtendedAttributeData:data name:name error:&xattrError];
+                if (!didSet && xattrError && collectedErrors) {
+                    [collectedErrors addObject:xattrError];
                 }
             }
         }
@@ -315,38 +346,9 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
     
     id retrievedValue = nil;
     
-    
-    /* Get the size of the attribute value and pull it into an NSData is possible */
-    
-    const char *itemPath = [[self path] fileSystemRepresentation];
-    void *valueDataBuffer = NULL;
-    ssize_t dataSize = getxattr (itemPath, [name UTF8String], NULL, SIZE_MAX, 0, xattrDefaultOptions);
-    if (dataSize != -1) {
-        valueDataBuffer = calloc(1, dataSize);
-        dataSize = getxattr (itemPath, [name UTF8String], valueDataBuffer, dataSize, 0, xattrDefaultOptions );
-    }
-    
-    /* */
-    
-    if (dataSize == -1) {
-        /* Clean up memory */
-        if (valueDataBuffer) {
-            free(valueDataBuffer); valueDataBuffer = NULL;
-        }
-        
-        if (outError) {
-            NSError *posixError = SOPOSIXErrorForURL(self);
-            NSMutableDictionary *augmentedErrorInfo = [[posixError userInfo] mutableCopy];
-            [augmentedErrorInfo setObject:name forKey:SOExtendedAttributeNameKey];
-            *outError = [NSError errorWithDomain:[posixError domain] code:[posixError code] userInfo:augmentedErrorInfo];
-        }
-        
-    } else {
-        /* Translate from encoded binary plist */
-        if (valueDataBuffer) {
-            NSData *data = [NSData dataWithBytesNoCopy:valueDataBuffer length:dataSize freeWhenDone:YES];
-            retrievedValue = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:outError];
-        }
+    NSData *data = [self dataForExtendedAttribute:name error:outError];
+    if (data) {
+        retrievedValue = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:outError];
     }
     
     return retrievedValue;
@@ -390,7 +392,7 @@ static inline NSError *SOPOSIXErrorForURL(NSURL *url)
 @end
 
 /*
- Copyright (c) 2012, Standard Orbit Software, LLC. All rights reserved.
+ Copyright (c) 2012-2014, Standard Orbit Software, LLC. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  

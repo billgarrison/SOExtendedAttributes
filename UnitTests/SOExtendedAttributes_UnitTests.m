@@ -11,15 +11,13 @@
 #include <sys/xattr.h>
 
 @interface SOExtendedAttributes_UnitTests : SenTestCase
-{
-    NSURL *targetURL;
-}
 @end
 
 @implementation SOExtendedAttributes_UnitTests
+{
+    NSURL *targetURL;
+}
 
-
-#pragma mark
 #pragma mark Fixture
 
 - (BOOL) createTestURLForTest:(SEL)testSelector
@@ -58,52 +56,6 @@
     
     [super tearDown];
 }
-
-#pragma mark - Size Tests
-
-- (void) testMaximumExtendedAttributeSize
-{
-    /* 
-     Per the man page for pathconf(2), the maximum extended attribute size should be 128KB. It isn't on 10.8, but it's pretty darn close.
-     Your mileage may vary on iOS or future OS X versions.
-     */
-    NSUInteger experimentallyDeterminedMaximumSizeOnOSXMountainLion = ((128 * 1024) - 50);
-
-    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
-    
-    STAssertTrue ([targetURL maximumExtendedAttributesSize] == experimentallyDeterminedMaximumSizeOnOSXMountainLion , @"Expected larger extended attributes");
-}
-
-- (void) testMaximumExtendedAttribute
-{
-    /* 
-     Experimentally determined on 10.8 that the system's reported maximum is not the actual maximum.
-     The actual maximum extended attribute size is the report value - 50 bytes. WTF...
-     */
-    
-    STAssertTrue([self createTestURLForTest:_cmd], @"Couldn't create test file");
-
-    /* Create random data of maximum extended attribute size */
-    NSUInteger maxAttribSize = [targetURL maximumExtendedAttributesSize];
-    int8_t *randomBytes = malloc(maxAttribSize);
-    for (int i = 0; i < maxAttribSize; i++) {
-        randomBytes[i] = arc4random() & 0xFF;
-    }
-    
-    NSData *testData = [NSData dataWithBytesNoCopy:randomBytes length:maxAttribSize freeWhenDone:YES];
-    NSError *error = nil;
-    BOOL added = [targetURL setExtendedAttributeValue:testData forName:@"largestPossibleAttribute" error:&error];
-    STAssertTrue (added, @"expected to have added extended attribute");
-    
-
-    /* Verify that we can also retrieve the maximum sized attribute value intact. */
-    
-    NSData *retrievedAttribute = [targetURL valueOfExtendedAttributeWithName:@"largestPossibleAttribute" error:&error];
-    STAssertNotNil (retrievedAttribute, @"expected to retrieve extended attribute");
-    STAssertTrue ([retrievedAttribute isEqualToData:testData], @"retrieved attribute doesn't equal the source attribute");
-}
-
-
 
 #pragma mark - Error Reporting Tests
 

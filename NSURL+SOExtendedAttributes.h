@@ -28,7 +28,7 @@
  
  ** Compatibility **
  
- SOExtendedAttributes is compatible with Mac OS X 10.6+ and iOS 5. The clang compiler is required. The source file `NSURL+SOExtendedAttributes.m` must be compiled with ARC enabled. For an alternate Cocoa implementation compatible with Mac OS X 10.4 and greater, see [UKXattrMetadataStore](http://zathras.de/angelweb/sourcecode.htm).
+ SOExtendedAttributes is compatible with Mac OS X 10.7+ and iOS 5. The clang compiler is required. The source file `NSURL+SOExtendedAttributes.m` must be compiled with ARC enabled. For an alternate Cocoa implementation compatible with Mac OS X 10.4 and greater, see [UKXattrMetadataStore](http://zathras.de/angelweb/sourcecode.htm).
  
  ** Symbolic links **
  
@@ -41,6 +41,7 @@
  ** Error Reporting **
  
  SOExtendedAttributes reports errors under the domain `SOExtendedAttributesErrorDomain`. When multiple errors occur on getting or setting extended attributes in a batch, those errors are collected in an NSArray and reported via error's -userInfo dictionary under `SOUnderlyingErrorsKey`.
+ 
  */
 
 extern NSString * const iCloudDoNotBackupAttributeName;
@@ -56,15 +57,32 @@ enum {
 @interface NSURL (SOExtendedAttributes)
 
 /**
-The maximum size in bytes for an extended attribute on the receiver.
+ Retrieves the extended attribute data with the given name.
  
- Uses pathconf(2) to determine the maximum number of bytes that an extended attribute can hold. This is a computed and approximate value because the system does not report a maximum extended attribute size directly; instead, it reports the number of bits by the file system object to used to hold the maximum extended attribute size.
+ @param name The name of the extended attribute. Throws `NSInvalidArgumentException` if name is nil or empty.
+ @param outError If an error occurs, upon return contains an NSError object that describes the problem. Pass NULL if you're not interested in error reporting.
  
- The reported maximum extended attribute size for HFS+ on Mac OS X 10.8 is 128KB (131072 bytes), but experimentally, it is actually 50 bytes less: 131022 bytes.
+ @return The retrieved extended attribute data, or nil if there was an error.
  
- @return The maximum size in bytes for an extended attribute on the receiver.
+ @since 1.0.7
  */
-- (NSUInteger) maximumExtendedAttributesSize;
+- (NSData *) dataForExtendedAttribute:(NSString *)name error:(NSError * __autoreleasing *)outError;
+
+/**
+ Sets an extended attribute with the given name and data value. 
+ 
+ The data value is used directly, without any further transformation.
+ 
+ @param data The extended attribute data to be written. If nil, returns YES immediately.
+ @param name The name of the extended attribute. Throws `NSInvalidArgumentException` if name is nil or empty.
+ @param outError If an error occurs, upon return contains an NSError object that describes the problem. Pass NULL if you're not interested in error reporting.
+ 
+ @return YES if the extended attribute was set. If NO, error will be reported via outError parameter.
+ 
+ @since 1.0.7
+ */
+- (BOOL) setExtendedAttributeData:(NSData *)data name:(NSString *)name error:(NSError * __autoreleasing *)outError;
+
 
 /** @name Accessing attributes in batches */
 
@@ -135,7 +153,7 @@ The maximum size in bytes for an extended attribute on the receiver.
 @end
 
 /*
- Copyright (c) 2012-2013, Standard Orbit Software, LLC. All rights reserved.
+ Copyright (c) 2012-2014, Standard Orbit Software, LLC. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  

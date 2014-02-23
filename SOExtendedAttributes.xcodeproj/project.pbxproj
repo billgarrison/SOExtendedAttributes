@@ -16,9 +16,6 @@
 /* Begin PBXFileReference section */
 		F212A53314CDC35900B65EA9 /* SOExtendedAttributes.UnitTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SOExtendedAttributes.UnitTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F212A53614CDC35900B65EA9 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		F212A53B14CDC35900B65EA9 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		F212A53C14CDC35900B65EA9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		F212A53D14CDC35900B65EA9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F212A54C14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+SOExtendedAttributes.h"; sourceTree = "<group>"; };
 		F212A54D14CDC3D100B65EA9 /* NSURL+SOExtendedAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+SOExtendedAttributes.m"; sourceTree = "<group>"; };
 		F212A55014CDC58800B65EA9 /* SOExtendedAttributes_UnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SOExtendedAttributes_UnitTests.m; path = UnitTests/SOExtendedAttributes_UnitTests.m; sourceTree = SOURCE_ROOT; };
@@ -78,9 +75,6 @@
 		F212A53A14CDC35900B65EA9 /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F212A53B14CDC35900B65EA9 /* AppKit.framework */,
-				F212A53C14CDC35900B65EA9 /* CoreData.framework */,
-				F212A53D14CDC35900B65EA9 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
